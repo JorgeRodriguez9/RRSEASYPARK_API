@@ -31,7 +31,7 @@ namespace RRSEASYPARK.ApiControllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddParkingLot(UserDto userDto)
+        public async Task<IActionResult> AddUser(UserDto userDto)
         {
             var result = await _userService.AddUser(userDto.Name, userDto.Password,userDto.RolId);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);

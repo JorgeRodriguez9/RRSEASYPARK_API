@@ -11,7 +11,7 @@ using RRSEASYPARK.Utilities;
 namespace ClientTest
 {
     
-    public class UnitTest1
+    public class ClientParkingLotTest
     {
         [Fact]
         public async Task Get()

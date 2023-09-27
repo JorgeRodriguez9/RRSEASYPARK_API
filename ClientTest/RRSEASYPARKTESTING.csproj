@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SOFTWARE\RRSEASYPARK.csproj" />
+    <ProjectReference Include="..\RRSEASYPARK\RRSEASYPARK.csproj" />
   </ItemGroup>
 
 </Project>

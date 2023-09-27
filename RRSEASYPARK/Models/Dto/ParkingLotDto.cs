@@ -2,7 +2,7 @@
 {
     public class ParkingLotDto
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string? Name { get; set; } = string.Empty;
         public string? Adress { get; set; } = string.Empty;
         public string? Nit { get; set; } = string.Empty;
@@ -14,8 +14,8 @@
         public int CantSpacesCar { get; set; }
         public int CantSpacesDisability { get; set; }
         public string? disabilityservices { get; set; } = string.Empty;
-        public string? CityId { get; set; } = string.Empty;
+        public Guid CityId { get; set; }
         public string? CityName { get; set; } = string.Empty;
-        public string? PropietaryParkId { get; set; } = string.Empty;
+        public Guid PropietaryParkId { get; set; }
     }
 }

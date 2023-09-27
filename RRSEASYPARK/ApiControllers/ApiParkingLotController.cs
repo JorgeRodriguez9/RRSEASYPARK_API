@@ -32,21 +32,21 @@ namespace RRSEASYPARK.ApiControllers
         [HttpPost]
         public async Task<IActionResult> AddParkingLot(ParkingLotDto parkingLotDto)
         {
-            var result = await _parkingLotService.AddParkingLot(parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability,Guid.Parse(parkingLotDto.CityId), Guid.Parse(parkingLotDto.PropietaryParkId));
+            var result = await _parkingLotService.AddParkingLot(parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability,parkingLotDto.CityId, parkingLotDto.PropietaryParkId);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateParkingLot(ParkingLotDto parkingLotDto)
         {
-            var result = await _parkingLotService.UpdateParkingLot(Guid.Parse(parkingLotDto.Id), parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability);
+            var result = await _parkingLotService.UpdateParkingLot(parkingLotDto.Id, parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
         [HttpDelete]
         public async Task<IActionResult> DeleteParkingLot(ParkingLotDto parkingLotDto)
         {
-            var result = await _parkingLotService.DeleteParkingLot(Guid.Parse(parkingLotDto.Id));
+            var result = await _parkingLotService.DeleteParkingLot(parkingLotDto.Id);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
     }
