@@ -29,6 +29,14 @@ namespace RRSEASYPARK.ApiControllers
             return ParkingLotList;
         }
 
+        [HttpGet("forId")]
+        public async Task<ParkingLotDto> GetReservation(ParkingLotDto parkingLotDto)
+        {
+            var ParkingLotOne = await _parkingLotService.GetParkingLot(parkingLotDto.Id);
+            var ParkingLotOneId = _mapper.Map<ParkingLot, ParkingLotDto>(ParkingLotOne);
+            return ParkingLotOneId;
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddParkingLot(ParkingLotDto parkingLotDto)
         {
