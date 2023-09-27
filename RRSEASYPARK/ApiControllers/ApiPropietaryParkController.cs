@@ -23,7 +23,7 @@ namespace RRSEASYPARK.ApiControllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<PropietaryParkDto>> GetPropietaryPark()
+        public async Task<IEnumerable<PropietaryParkDto>> GetPropietaryParks()
         {
             var PropietaryParks = await _propietaryParkService.GetPropietaryParks();
             var PropietaryParksList = _mapper.Map<List<PropietaryPark>, List<PropietaryParkDto>>(PropietaryParks.ToList());
