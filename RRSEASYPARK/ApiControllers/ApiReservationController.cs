@@ -23,12 +23,20 @@ namespace RRSEASYPARK.ApiControllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ReservationDto>> GetReservation()
+        public async Task<IEnumerable<ReservationDto>> GetReservations()
         {
             var Reservations = await _reservationService.GetReservations();
             var ReservationsList = _mapper.Map<List<Reservation>, List<ReservationDto>>(Reservations.ToList());
             return ReservationsList;
         }
+
+        //[HttpGet]
+        //public async Task<ReservationDto> GetReservation(ReservationDto reservationDto)
+        //{
+        //    var Reservations = await _reservationService.GetReservation(reservationDto.Id);
+        //    var ReservationsId = _mapper.Map<Reservation, ReservationDto>(Reservations);
+        //    return ReservationsId;
+        //}
 
         [HttpPost]
         public async Task<IActionResult> AddReservation(ReservationDto reservationDto)
