@@ -21,7 +21,10 @@ namespace RRSEASYPARK.Utilities
 
             CreateMap<Reservation, ReservationDto>();
 
-            CreateMap<User, UserDto>();            
+            CreateMap<User, UserDto>();
+
+            CreateMap<TypeVehicle, TypeVehicleDto>();
+
         }
     }
 }
