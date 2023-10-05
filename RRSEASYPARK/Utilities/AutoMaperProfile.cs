@@ -19,7 +19,9 @@ namespace RRSEASYPARK.Utilities
 
             CreateMap<PropietaryPark, PropietaryParkDto>();
 
-            CreateMap<Reservation, ReservationDto>();
+            CreateMap<Reservation, ReservationDto>().ForMember(destiny => destiny.ClientName,
+            opt => opt.MapFrom(origen => origen.ClientParkingLot.Name)).ForMember(destiny => destiny.Telephone,
+            opt => opt.MapFrom(origen => origen.ClientParkingLot.Telephone));
 
             CreateMap<User, UserDto>();
 

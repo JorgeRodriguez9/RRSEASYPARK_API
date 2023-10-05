@@ -21,8 +21,15 @@ namespace RRSEASYPARK.ApiControllers
             _cityService = cityService;
             _mapper = mapper;
         }
-
+        /// <summary>
+        /// This API method is where we get all the city registered in our database.
+        /// </summary>
+        /// <returns>A list of citys</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<CityDto>), 200)]
         public async Task<IEnumerable<CityDto>> GetCities()
         {
             var Cities = await _cityService.GetCities();

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RRSEASYPARK.DAL;
 
@@ -11,9 +12,11 @@ using RRSEASYPARK.DAL;
 namespace RRSEASYPARK.Migrations
 {
     [DbContext(typeof(RRSEASYPARKContext))]
-    partial class RRSEASYPARKContextModelSnapshot : ModelSnapshot
+    [Migration("20231005021051_migracion3")]
+    partial class migracion3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,8 +231,8 @@ namespace RRSEASYPARK.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Password")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<Guid>("RolId")
                         .HasColumnType("uniqueidentifier");
