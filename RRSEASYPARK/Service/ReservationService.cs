@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions.Extensions;
+using Microsoft.EntityFrameworkCore;
 using RRSEasyPark.Models;
 using RRSEASYPARK.DAL;
 using RRSEASYPARK.Models;
@@ -13,19 +14,22 @@ namespace RRSEASYPARK.Service
         {
             _context = context;
         }
-        public async Task<ServiceResponse> AddReservation(DateTime date, long totalPrice, string disabled, Guid clientId, Guid typeVehicleId, Guid parkingLotId)
+        public async Task<ServiceResponse> AddReservation(DateTime startdate, long totalprice, DateTime enddate, Guid typeVehicleId, Guid parkingLotId, string Disability )
         {
             try
             {
+                TimeZoneInfo colombiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time"); // Colombia's time zone
+
                 await _context.reservations.AddAsync(new Reservation()
                 {
                     Id = Guid.NewGuid(),
-                    Date = date,
-                    TotalPrice = totalPrice,
-                    Disabled = disabled,
-                    ClientParkingLotId = clientId,
+                    StartDate = TimeZoneInfo.ConvertTime(startdate, colombiaTimeZone),
+                    EndDate = TimeZoneInfo.ConvertTime(enddate, colombiaTimeZone),
                     TypeVehicleId = typeVehicleId,
-                    ParkingLotId = parkingLotId
+                    ParkingLotId = parkingLotId,
+                    Disabled = Disability,
+                    TotalPrice = totalprice,
+                    ClientParkingLotId = Guid.Parse("847cafcf-dac7-48b0-935d-018b8d0de1fa")
 
                 });
                 await _context.SaveChangesAsync();
@@ -55,7 +59,7 @@ namespace RRSEASYPARK.Service
         {
             return await _context.reservations.Include(x => x.ClientParkingLot).ToListAsync();
         }
-        public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, DateTime date, long totalPrice, string disabled)
+        public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, DateTime startdate, DateTime enddate, long totalPrice, string disabled)
         {
             try
             {
@@ -69,7 +73,8 @@ namespace RRSEASYPARK.Service
                     };
                 }
 
-                reservation.Date = date;
+                reservation.StartDate = startdate;
+                reservation.EndDate = enddate;
                 reservation.TotalPrice = totalPrice;
                 reservation.Disabled = disabled;
 

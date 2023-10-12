@@ -22,7 +22,7 @@ namespace RRSEASYPARK.Service
 
         public async Task<ParkingLot?> GetParkingLot(Guid parkingLotId)
         {
-            return await _context.parkingLots.FindAsync(parkingLotId);
+            return await _context.parkingLots.Include(x => x.City).FirstOrDefaultAsync(x => x.Id == parkingLotId); ;
         }
 
         public async Task<ServiceResponse> AddParkingLot(string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, Guid cityId, Guid propietaryParkId)

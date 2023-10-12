@@ -5,6 +5,7 @@ using RRSEASYPARK.Models.Dto;
 using RRSEASYPARK.Models;
 using RRSEASYPARK.Service;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
 namespace RRSEASYPARK.ApiControllers
@@ -16,12 +17,14 @@ namespace RRSEASYPARK.ApiControllers
     {
 
         private readonly IReservationService _reservationService;
+        private readonly IParkingLotService _parkingLotService;
         private readonly IMapper _mapper;
 
-        public ApiReservationController(IReservationService reservationService, IMapper mapper)
+        public ApiReservationController(IReservationService reservationService,  IMapper mapper, IParkingLotService parkingLotService)
         {
             _reservationService = reservationService;
             _mapper = mapper;
+            _parkingLotService = parkingLotService;
         }
         /// <summary>
         /// This API method is where we get all the reservations registered in our database.
@@ -60,9 +63,20 @@ namespace RRSEASYPARK.ApiControllers
         [HttpPost]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> AddReservation(ReservationDto reservationDto)
+        public async Task<IActionResult> AddReservation(ReservationPostDto reservationPostDto)
         {
-            var result = await _reservationService.AddReservation(reservationDto.Date, reservationDto.TotalPrice, reservationDto.Disabled, reservationDto.ClientId, reservationDto.TypeVehicleId, reservationDto.ParkingLotId);
+            
+            var ParkingLotSelect = await _parkingLotService.GetParkingLot(reservationPostDto.ParkingLotId);
+            var Price = 0;
+            if (reservationPostDto.Disability == Enums.DisabilityValues.SI.ToString())
+            {
+                Price = ParkingLotSelect.DisabilityPrice;
+            }
+            else
+            {
+                Price = ParkingLotSelect.NormalPrice;
+            }
+            var result = await _reservationService.AddReservation(reservationPostDto.StartDate, Price, reservationPostDto.EndDate, reservationPostDto.VehicleType, reservationPostDto.ParkingLotId, reservationPostDto.Disability);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
@@ -80,7 +94,7 @@ namespace RRSEASYPARK.ApiControllers
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> UpdateReservation(ReservationDto reservationDto)
         {
-            var result = await _reservationService.UpdateReservation(reservationDto.Id, reservationDto.Date, reservationDto.TotalPrice, reservationDto.Disabled);
+            var result = await _reservationService.UpdateReservation(reservationDto.Id, reservationDto.StartDate, reservationDto.EndDate, reservationDto.TotalPrice, reservationDto.Disabled);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
@@ -103,3 +117,4 @@ namespace RRSEASYPARK.ApiControllers
         }
     }
 }
+
