@@ -5,6 +5,8 @@ using RRSEASYPARK.Models.Dto;
 using RRSEASYPARK.Models;
 using RRSEASYPARK.Service;
 using AutoMapper;
+using RRSEASYPARK.Models.Request;
+using Azure;
 
 namespace RRSEASYPARK.ApiControllers
 {
@@ -58,9 +60,33 @@ namespace RRSEASYPARK.ApiControllers
         [HttpPost("Login")]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> Autentification(UserDto userDto)
+        public async Task<IActionResult> Autentification([FromBody] AuthRequest user)
         {
-            return Ok(userDto);
+
+            ServiceResponse response = new ServiceResponse();
+            try
+            {
+              
+                var userresponse = _userService.Auth(user);
+
+                if (userresponse == null)
+                {
+                    response.Result = ServiceResponseType.Failed;
+                    response.ErrorMessage = "Usuario o contraseña incorrecta";
+                    return BadRequest();
+                }
+
+                response.Result = ServiceResponseType.Succeded;
+                response.Data = userresponse;
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+                return BadRequest(response);
+            }
+           
         }
 
         /// <summary>

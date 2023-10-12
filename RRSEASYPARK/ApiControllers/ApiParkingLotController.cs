@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RRSEasyPark.Models;
@@ -10,6 +11,7 @@ namespace RRSEASYPARK.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ApiParkingLotController : ControllerBase
     {
         private readonly IParkingLotService _parkingLotService;
@@ -27,6 +29,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Client")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ParkingLotDto>), 200)]
         public async Task<IEnumerable<ParkingLotDto>> GetParkingLots()
@@ -44,6 +47,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Client,Propietary Park")]
         [HttpGet("obtener/{id}")]
         [ProducesResponseType(typeof(ParkingLotDto), 200)]
         [ProducesResponseType(typeof(string), 400)]
@@ -62,6 +66,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Propietary Park")]
         [HttpPost]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]

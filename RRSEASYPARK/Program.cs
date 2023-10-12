@@ -6,6 +6,10 @@ using RRSEASYPARK.Models.Dto;
 using AutoMapper;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
+using RRSEASYPARK.Models.Common;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace RRSEASYPARK
 {
@@ -45,6 +49,31 @@ namespace RRSEASYPARK
             builder.Services.AddDbContext<RRSEASYPARKContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            //token
+            var appSettingsConfiguration = builder.Configuration.GetSection("AppSettings");
+            builder.Services.Configure<AppSettings>(appSettingsConfiguration);
+
+            //jwt
+
+            var appSettings = appSettingsConfiguration.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.secret);//obtiene el secreto y lo pone en una matriz de bytes
+            builder.Services.AddAuthentication(d =>
+            {
+                d.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                d.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
             builder.Services.AddScoped<ICityService, CityService>();
             builder.Services.AddScoped<IClientParkingLotService, ClientParkingLotService>();
             builder.Services.AddScoped<IParkingLotService, ParkingLotService>();
@@ -79,6 +108,7 @@ namespace RRSEASYPARK
             app.UseCors(MiCor);
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

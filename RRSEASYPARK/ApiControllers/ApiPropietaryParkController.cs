@@ -5,6 +5,7 @@ using RRSEASYPARK.Models.Dto;
 using RRSEASYPARK.Models;
 using RRSEASYPARK.Service;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RRSEASYPARK.ApiControllers
 {

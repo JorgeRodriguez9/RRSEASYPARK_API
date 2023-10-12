@@ -5,11 +5,13 @@ using RRSEASYPARK.Models.Dto;
 using RRSEASYPARK.Models;
 using RRSEASYPARK.Service;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RRSEASYPARK.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ApiReservationController : ControllerBase
     {
 
@@ -28,6 +30,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Propietary Park")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ReservationDto>), 200)]
         public async Task<IEnumerable<ReservationDto>> GetReservations()
@@ -53,6 +56,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Client")]
         [HttpPost]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
@@ -70,6 +74,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        [AllowAnonymous]
         [HttpPut]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
@@ -87,6 +92,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        [AllowAnonymous]
         [HttpDelete]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
