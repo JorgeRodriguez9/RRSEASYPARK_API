@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RRSEASYPARK.DAL;
 
@@ -11,9 +12,11 @@ using RRSEASYPARK.DAL;
 namespace RRSEASYPARK.Migrations
 {
     [DbContext(typeof(RRSEASYPARKContext))]
-    partial class RRSEASYPARKContextModelSnapshot : ModelSnapshot
+    [Migration("20231003040023_Migracion3")]
+    partial class Migracion3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,17 +163,14 @@ namespace RRSEASYPARK.Migrations
                     b.Property<Guid>("ClientParkingLotId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Disabled")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<Guid>("ParkingLotId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<long>("TotalPrice")
                         .HasColumnType("bigint");
