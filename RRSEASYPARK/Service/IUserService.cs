@@ -1,5 +1,8 @@
 ﻿using RRSEasyPark.Models;
 using RRSEASYPARK.Models;
+using RRSEASYPARK.Models.Dto;
+using RRSEASYPARK.Models.Request;
+using RRSEASYPARK.Models.Response;
 
 namespace RRSEASYPARK.Service
 {
@@ -11,7 +14,7 @@ namespace RRSEASYPARK.Service
         Task<IEnumerable<User>> GetUser();
         Task<ServiceResponse> UpdateUser(Guid UserId, string name, string password);
         Task<ServiceResponse?> DeleteUser(Guid UserId);
-
+        UserResponse Auth(AuthRequest model);
 
     }
 }
