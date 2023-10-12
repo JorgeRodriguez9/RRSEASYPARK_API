@@ -57,7 +57,7 @@ namespace RRSEASYPARK.Service
 
         public async Task<IEnumerable<Reservation>> GetReservations()
         {
-            return await _context.reservations.ToListAsync();
+            return await _context.reservations.Include(x => x.ClientParkingLot).ToListAsync();
         }
         public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, DateTime startdate, DateTime enddate, long totalPrice, string disabled)
         {

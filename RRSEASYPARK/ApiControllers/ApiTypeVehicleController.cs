@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using RRSEASYPARK.Models.Dto;
 using RRSEasyPark.Models;
 using RRSEASYPARK.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RRSEASYPARK.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ApiTypeVehicleController : ControllerBase
     {
 
@@ -21,8 +23,17 @@ namespace RRSEASYPARK.ApiControllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// This API method is where we get all the types vehicles registered in our database.
+        /// </summary>
+        /// <returns>A list of type vehicles</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Client")]
         [HttpGet]
-        public async Task<IEnumerable<TypeVehicleDto>> GetCities()
+        [ProducesResponseType(typeof(IEnumerable<TypeVehicleDto>), 200)]
+        public async Task<IEnumerable<TypeVehicleDto>> GetTypeVehicles()
         {
             var Vehicles = await _typeVehicleService.GetTypeVehicles();
             var VehiclesList = _mapper.Map<List<TypeVehicle>, List<TypeVehicleDto>>(Vehicles.ToList());

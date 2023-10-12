@@ -6,11 +6,13 @@ using RRSEASYPARK.Models;
 using RRSEASYPARK.Service;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RRSEASYPARK.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ApiReservationController : ControllerBase
     {
 
@@ -24,8 +26,16 @@ namespace RRSEASYPARK.ApiControllers
             _mapper = mapper;
             _parkingLotService = parkingLotService;
         }
-
+        /// <summary>
+        /// This API method is where we get all the reservations registered in our database.
+        /// </summary>
+        /// <returns>A list of reservations</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Propietary Park")]
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ReservationDto>), 200)]
         public async Task<IEnumerable<ReservationDto>> GetReservations()
         {
             var Reservations = await _reservationService.GetReservations();
@@ -41,7 +51,18 @@ namespace RRSEASYPARK.ApiControllers
         //    return ReservationsId;
         //}
 
+        /// <summary>
+        /// This API method is used to add a reservation to the database
+        /// </summary>
+        /// <param name="reservationDto"></param>
+        /// <returns>A response code</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Client")]
         [HttpPost]
+        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> AddReservation(ReservationPostDto reservationPostDto)
         {
             
@@ -59,14 +80,36 @@ namespace RRSEASYPARK.ApiControllers
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
+        /// <summary>
+        /// This API method is used to update a reservation in the database
+        /// </summary>
+        /// <param name="reservationDto"></param>
+        /// <returns>A response code</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [AllowAnonymous]
         [HttpPut]
+        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> UpdateReservation(ReservationDto reservationDto)
         {
             var result = await _reservationService.UpdateReservation(reservationDto.Id, reservationDto.StartDate, reservationDto.EndDate, reservationDto.TotalPrice, reservationDto.Disabled);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
+        /// <summary>
+        /// This API method is used to delete a reservation in the database
+        /// </summary>
+        /// <param name="reservationDto"></param>
+        /// <returns>A response code</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [AllowAnonymous]
         [HttpDelete]
+        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> DeleteReservation(ReservationDto reservationDto)
         {
             var result = await _reservationService.DeleteReservation(reservationDto.Id);

@@ -51,10 +51,10 @@ namespace RRSEASYPARKTESTING
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
 
-            var getReservation  = new ApiReservationController(mockRepositorio.Object, mapper);
+            var getReservation = new ApiReservationController(mockRepositorio.Object, mapper);
 
             // Act
-            var result = await getReservation.GetReservation();
+            var result = await getReservation.GetReservations();
 
             // Assert
             var model = Assert.IsAssignableFrom<List<ReservationDto>>(result);

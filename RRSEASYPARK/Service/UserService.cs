@@ -1,17 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using RRSEasyPark.Models;
 using RRSEASYPARK.DAL;
 using RRSEASYPARK.Models;
+using RRSEASYPARK.Models.Common;
+using RRSEASYPARK.Models.Dto;
+using RRSEASYPARK.Models.Request;
+using RRSEASYPARK.Models.Response;
+using RRSEASYPARK.Tools;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace RRSEASYPARK.Service
 {
     public class UserService : IUserService
     {
         private readonly RRSEASYPARKContext _context;
+        private readonly AppSettings _appSettings;
+        private readonly IMapper _mapper;
 
-        public UserService(RRSEASYPARKContext context)
+        public UserService(RRSEASYPARKContext context, IOptions<AppSettings> appSettings, IMapper mapper)
         {
             _context = context;
+            _appSettings = appSettings.Value;
+            _mapper = mapper;
         }
 
         public async Task<ServiceResponse> AddUser(string name, string password, Guid RolId)
@@ -120,6 +135,60 @@ namespace RRSEASYPARK.Service
                     ErrorMessage = ex.Message
                 };
             }
+        }
+
+        public UserResponse Auth(AuthRequest model)
+        {
+
+            UserResponse userresponse = new UserResponse();
+
+            string spassword = Encrypt.GetSHA256(model.Password);
+
+            var user = _context.users.Where(c => c.Name == model.nameUser && c.Password == spassword).Include(x => x.Rol).FirstOrDefault();
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var userRequest = _mapper.Map<User, UserRequest>(user);
+
+            userresponse.UserName = user.Name;
+            userresponse.Token = GetToken(userRequest);
+           
+
+            return userresponse;
+           
+        }
+
+        private string GetToken(UserRequest user)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var key = Encoding.ASCII.GetBytes(_appSettings.secret);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new System.Security.Claims.ClaimsIdentity(
+
+                    new Claim[]
+                    {
+                        new Claim("Id", user.Id.ToString()),
+                        new Claim("Name", user.Name),
+                        new Claim("RolId", user.RolId.ToString()),
+                        new Claim(ClaimTypes.Role, user.RolName.ToString()),
+
+                    }
+
+                    ),
+
+                Expires = DateTime.UtcNow.AddDays(60),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
     }
 }
