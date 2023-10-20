@@ -14,6 +14,7 @@
         public int CantSpacesCar { get; set; }
         public int CantSpacesDisability { get; set; }
         public string? disabilityservices { get; set; } = string.Empty;
+        public string? Images { get; set; } = string.Empty;
         public Guid CityId { get; set; }
         public string? CityName { get; set; } = string.Empty;
         public Guid PropietaryParkId { get; set; }

@@ -141,5 +141,38 @@ namespace RRSEASYPARK.Service
             }
         }
 
+        public async Task<ServiceResponse?> AddImages(string img)
+        {
+            try
+            {
+                var reservas = await _context.parkingLots.FirstAsync();
+                if (reservas == null)
+                {
+                    return new ServiceResponse()
+                    {
+                        Result = ServiceResponseType.Failed,
+                        ErrorMessage = "Parking lot don't exist"
+                    };
+                }
+                reservas.Images = img;
+
+                _context.parkingLots.Update(reservas);
+                await _context.SaveChangesAsync();
+
+                return new ServiceResponse()
+                {
+                    Result = ServiceResponseType.Succeded,
+                    InformationMessage = "parking lot add Correct"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse()
+                {
+                    Result = ServiceResponseType.Failed,
+                    ErrorMessage = ex.Message
+                };
+            }
+        }
     }
 }

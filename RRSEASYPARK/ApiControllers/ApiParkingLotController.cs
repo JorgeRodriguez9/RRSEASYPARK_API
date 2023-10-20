@@ -44,6 +44,13 @@ namespace RRSEASYPARK.ApiControllers
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
+        [HttpPost("imagenes")]
+        public async Task<IActionResult> Images([FromBody]string Images)
+        {
+            var result = await _parkingLotService.AddImages(Images);
+            return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
+        }
+
         [HttpPut]
         public async Task<IActionResult> UpdateParkingLot(ParkingLotDto parkingLotDto)
         {

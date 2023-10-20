@@ -12,5 +12,7 @@ namespace RRSEASYPARK.Service
         Task<ServiceResponse> UpdateParkingLot(Guid parkingLotId, string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability);
         Task<ServiceResponse?> DeleteParkingLot(Guid parkingLotId);
 
+        Task<ServiceResponse?> AddImages(string img);
+
     }
 }

@@ -20,6 +20,7 @@ namespace RRSEasyPark.Models
         public int CantSpacesCar { get; set; }
         public int CantSpacesDisability { get; set; }
         public string? disabilityservices {  get; set; } = string.Empty;
+        public string? Images { get; set; } = string.Empty;
         public Guid CityId { get; set; }
         public virtual City? City { get; set; }
         public Guid PropietaryParkId { get; set; }
