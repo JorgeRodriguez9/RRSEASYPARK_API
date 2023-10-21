@@ -7,10 +7,8 @@ namespace RRSEasyPark.Models
     {
         [Key]
         public Guid Id { get; set; }
-
         [MaxLength(60)]
         public string Name { get; set; } = string.Empty;
-
         [MaxLength(256)]
         public string? Password { get; set; } = string.Empty;
         public Guid RolId { get; set; }

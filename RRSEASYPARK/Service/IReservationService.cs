@@ -5,10 +5,10 @@ namespace RRSEASYPARK.Service
 {
     public interface IReservationService
     {
-        Task<ServiceResponse> AddReservation(DateTime startdate, long totalprice, DateTime enddate, Guid typeVehicleId, Guid parkingLotId, string Disability);
+        Task<ServiceResponse> AddReservation(string date, long totalprice, TimeOnly starttime, TimeOnly endtime, Guid typeVehicleId, Guid parkingLotId, string Disability);
         Task<Reservation?> GetReservation(Guid ReservationId);
         Task<IEnumerable<Reservation>> GetReservations();
-        Task<ServiceResponse> UpdateReservation(Guid ReservationId, DateTime stsrtdate, DateTime enddate, long totalPrice, string disabled);
+        Task<ServiceResponse> UpdateReservation(Guid ReservationId, string date,TimeOnly starttime, TimeOnly enddate, long totalPrice, string disabled);
         Task<ServiceResponse?> DeleteReservation(Guid ReservationId);
     }
 }

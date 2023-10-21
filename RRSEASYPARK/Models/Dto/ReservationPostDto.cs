@@ -2,8 +2,9 @@
 {
     public class ReservationPostDto
     {       
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public string Date { get; set; }
+        public TimeOnly starttime { get; set; }
+        public TimeOnly Endtime { get; set; }
         public Guid VehicleType { get; set; }
         public Guid ParkingLotId { get; set; }
         public string Disability { get; set; }

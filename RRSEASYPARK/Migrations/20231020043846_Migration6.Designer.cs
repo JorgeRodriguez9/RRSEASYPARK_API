@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RRSEASYPARK.DAL;
 
@@ -11,9 +12,11 @@ using RRSEASYPARK.DAL;
 namespace RRSEASYPARK.Migrations
 {
     [DbContext(typeof(RRSEASYPARKContext))]
-    partial class RRSEASYPARKContextModelSnapshot : ModelSnapshot
+    [Migration("20231020043846_Migration6")]
+    partial class Migration6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,9 +94,6 @@ namespace RRSEASYPARK.Migrations
 
                     b.Property<int>("DisabilityPrice")
                         .HasColumnType("int");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Info")
                         .HasColumnType("nvarchar(max)");
