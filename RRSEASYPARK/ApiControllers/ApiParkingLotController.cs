@@ -70,7 +70,7 @@ namespace RRSEASYPARK.ApiControllers
         [HttpPost]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> AddParkingLot(ParkingLotDto parkingLotDto)
+        public async Task<IActionResult> AddParkingLot(ParkingLotPostDto parkingLotDto)
         {
             var result = await _parkingLotService.AddParkingLot(parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability, parkingLotDto.Image, parkingLotDto.CityId, parkingLotDto.PropietaryParkId);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
