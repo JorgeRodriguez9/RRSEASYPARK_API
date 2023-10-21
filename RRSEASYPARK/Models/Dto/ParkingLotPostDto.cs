@@ -15,6 +15,5 @@
         public string? disabilityservices { get; set; } = string.Empty;
         public string? Image { get; set; } = string.Empty;
         public Guid CityId { get; set; }
-        public Guid PropietaryParkId { get; set; }
     }
 }

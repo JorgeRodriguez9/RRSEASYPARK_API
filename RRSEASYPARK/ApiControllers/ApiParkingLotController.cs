@@ -6,6 +6,7 @@ using RRSEasyPark.Models;
 using RRSEASYPARK.Models;
 using RRSEASYPARK.Models.Dto;
 using RRSEASYPARK.Service;
+using System.Security.Claims;
 
 namespace RRSEASYPARK.ApiControllers
 {
@@ -72,7 +73,8 @@ namespace RRSEASYPARK.ApiControllers
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> AddParkingLot(ParkingLotPostDto parkingLotDto)
         {
-            var result = await _parkingLotService.AddParkingLot(parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability, parkingLotDto.Image, parkingLotDto.CityId, parkingLotDto.PropietaryParkId);
+            var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var result = await _parkingLotService.AddParkingLot(parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability, parkingLotDto.Image, parkingLotDto.CityId, Guid.Parse(user));
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 

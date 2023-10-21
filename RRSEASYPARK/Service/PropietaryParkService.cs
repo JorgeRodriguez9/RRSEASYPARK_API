@@ -47,6 +47,7 @@ namespace RRSEASYPARK.Service
 
         public async Task<PropietaryPark?> GetPropietaryPark(Guid propietaryParkId)
         {
+
             return await _context.propietaryParks.FindAsync(propietaryParkId);
         }
 
