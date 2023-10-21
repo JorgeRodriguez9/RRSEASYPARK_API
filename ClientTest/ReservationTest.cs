@@ -29,7 +29,8 @@ namespace RRSEASYPARKTESTING
                               new Reservation
                           {
                               Id = Guid.NewGuid(),
-                              Date = DateTime.Now,
+                              EndDate = DateTime.Now,
+                              StartDate = DateTime.Now,
                               TotalPrice = 20000,
                               Disabled = "SI",
                               ClientParkingLotId = Guid.NewGuid(),
@@ -39,7 +40,8 @@ namespace RRSEASYPARKTESTING
                           new Reservation
                           {
                               Id = Guid.NewGuid(),
-                              Date = DateTime.Now,
+                              EndDate = DateTime.Now,
+                              StartDate = DateTime.Now,
                               TotalPrice = 20000,
                               Disabled = "SI",
                               ClientParkingLotId = Guid.NewGuid(),
@@ -51,7 +53,7 @@ namespace RRSEASYPARKTESTING
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
 
-            var getReservation = new ApiReservationController(mockRepositorio.Object, mapper);
+            var getReservation = new ApiReservationController(mockRepositorio.Object, mapper, null);
 
             // Act
             var result = await getReservation.GetReservations();
@@ -75,26 +77,25 @@ namespace RRSEASYPARKTESTING
             // Configurar el mock para el servicio
             mockClienteService.Setup(service => service.AddReservation(It.IsAny<DateTime>(),
               It.IsAny<long>(),
-              It.IsAny<string>(),
+              It.IsAny<DateTime>(),
              It.IsAny<Guid>(),
              It.IsAny<Guid>(),
-             It.IsAny<Guid>())).ReturnsAsync((DateTime date, long totalPrice, string disabled, Guid clientId, Guid typeVehicleId, Guid parkingLotId) =>
+             It.IsAny<string>())).ReturnsAsync((DateTime startDate, long totalPrice, DateTime endDate,  Guid typeVehicleId, Guid clientId, Guid parkingLotId, string disabled) =>
              new ServiceResponse
              {
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Reservacion agregado exitosamente"
              });
-            var reservationController = new ApiReservationController(mockClienteService.Object, mapper);
+            var reservationController = new ApiReservationController(mockClienteService.Object, mapper, null);
 
             // Act
-            var newReservation = new ReservationDto
+            var newReservation = new ReservationPostDto
             {
-                Id = Guid.NewGuid(),
-                Date = DateTime.Now,
+                EndDate = DateTime.Now,
+                StartDate = DateTime.Now,
                 TotalPrice = 20000,
-                Disabled = "SI",
-                ClientId = Guid.NewGuid(),
-                TypeVehicleId = Guid.NewGuid(),
+                Disability = "SI",
+                VehicleType = Guid.NewGuid(),
                 ParkingLotId = Guid.NewGuid()
             };
 
@@ -120,7 +121,7 @@ namespace RRSEASYPARKTESTING
             IMapper mapper = config.CreateMapper();
 
             // Configurar el mock para el servicio
-            mockClienteService.Setup(service => service.UpdateReservation(It.IsAny<Guid>(), It.IsAny<DateTime>(),
+            mockClienteService.Setup(service => service.UpdateReservation(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(),
               It.IsAny<long>(),
               It.IsAny<string>())).ReturnsAsync(
              new ServiceResponse
@@ -128,13 +129,14 @@ namespace RRSEASYPARKTESTING
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Reserva actualizada exitosamente"
              });
-            var reservationController = new ApiReservationController(mockClienteService.Object, mapper);
+            var reservationController = new ApiReservationController(mockClienteService.Object, mapper, null);
 
             // Act
             var newReservation = new ReservationDto
             {
                 Id = Guid.NewGuid(),
-                Date = DateTime.Now,
+                EndDate = DateTime.Now,
+                StartDate = DateTime.Now,
                 TotalPrice = 20000,
                 Disabled = "SI",
                 ClientId = Guid.NewGuid(),
@@ -170,7 +172,7 @@ namespace RRSEASYPARKTESTING
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Reservacion eliminada exitosamente"
              });
-            var reservationController = new ApiReservationController(mockClienteService.Object, mapper);
+            var reservationController = new ApiReservationController(mockClienteService.Object, mapper, null);
 
             // Act
             var newReservation = new ReservationDto

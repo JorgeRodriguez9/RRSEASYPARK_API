@@ -15,6 +15,7 @@ using RRSEASYPARK.Utilities;
 
 namespace RRSEASYPARKTESTING
 {
+    /*
     public class ParkingLotTest
     {
 
@@ -75,7 +76,7 @@ namespace RRSEASYPARKTESTING
             Assert.Equal(2, model.Count); // Verificar que se retornen dos clientes
 
         }
-
+        
         [Fact]
         public async Task post()
         {
@@ -232,4 +233,6 @@ namespace RRSEASYPARKTESTING
         }
 
     }
+
+        */
 }

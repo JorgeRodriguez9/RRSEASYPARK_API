@@ -104,7 +104,9 @@ namespace RRSEASYPARK.Service
                     ParkingLotId = parkingLotId,
                     Disabled = disability,
                     TotalPrice = totalprice,
+
                     ClientParkingLotId = Guid.Parse("847cafcf-dac7-48b0-935d-018b8d0de1fa")
+
                 });
 
                 switch (TypeVehicle.Name)
