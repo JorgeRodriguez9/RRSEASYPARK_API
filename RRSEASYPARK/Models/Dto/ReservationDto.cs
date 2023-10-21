@@ -4,8 +4,8 @@
     {
         public Guid Id { get; set; }
         public string Date { get; set; }
-        public TimeOnly starttime { get; set; }
-        public TimeOnly Endtime { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public long TotalPrice { get; set; }
         public string? Disabled { get; set; }
         public Guid ClientId { get; set; }

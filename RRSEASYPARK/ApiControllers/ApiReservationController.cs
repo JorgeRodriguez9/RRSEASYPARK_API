@@ -90,15 +90,15 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
-        [AllowAnonymous]
-        [HttpPut]
-        [ProducesResponseType(typeof(void), 200)]
-        [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> UpdateReservation(ReservationDto reservationDto)
-        {
-            var result = await _reservationService.UpdateReservation(reservationDto.Id, reservationDto.Date, reservationDto.starttime, reservationDto.Endtime, reservationDto.TotalPrice, reservationDto.Disabled);
-            return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
-        }
+        //[AllowAnonymous]
+        //[HttpPut]
+        //[ProducesResponseType(typeof(void), 200)]
+        //[ProducesResponseType(typeof(string), 400)]
+        //public async Task<IActionResult> UpdateReservation(ReservationDto reservationDto)
+        //{
+        //    var result = await _reservationService.UpdateReservation(reservationDto.Id, reservationDto.Date, reservationDto.StartTime, reservationDto.EndTime, reservationDto.TotalPrice, reservationDto.Disabled);
+        //    return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
+        //}
 
         /// <summary>
         /// This API method is used to delete a reservation in the database
