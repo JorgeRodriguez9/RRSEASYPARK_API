@@ -29,7 +29,7 @@ namespace RRSEASYPARK.Service
                     ParkingLotId = parkingLotId,
                     Disabled = Disability,
                     TotalPrice = totalprice,
-                    ClientParkingLotId = Guid.Parse("847cafcf-dac7-48b0-935d-018b8d0de1fa")
+                    ClientParkingLotId = Guid.Parse("f70cf415-4647-4de2-9b8a-5cfffad8b090")
 
                 });
                 await _context.SaveChangesAsync();

@@ -1,16 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace RRSEasyPark.Models
+﻿namespace RRSEASYPARK.Models.Dto
 {
-    public class ParkingLot
+    public class ParkingLotPostDto
     {
-        [Key]
-        public Guid Id { get; set; }
-        [MaxLength(50)]
         public string? Name { get; set; } = string.Empty;
-        [MaxLength(150)]
         public string? Adress { get; set; } = string.Empty;
-        [MaxLength(20)]
         public string? Nit { get; set; } = string.Empty;
         public long Telephone { get; set; }
         public int NormalPrice { get; set; }
@@ -19,11 +12,9 @@ namespace RRSEasyPark.Models
         public int CantSpacesMotorcycle { get; set; }
         public int CantSpacesCar { get; set; }
         public int CantSpacesDisability { get; set; }
-        public string? disabilityservices {  get; set; } = string.Empty;
+        public string? disabilityservices { get; set; } = string.Empty;
         public string? Image { get; set; } = string.Empty;
         public Guid CityId { get; set; }
-        public virtual City? City { get; set; }
         public Guid PropietaryParkId { get; set; }
-        public virtual PropietaryPark? PropietaryPark { get; set;}
     }
 }

@@ -25,7 +25,7 @@ namespace RRSEASYPARK.Service
             return await _context.parkingLots.Include(x => x.City).FirstOrDefaultAsync(x => x.Id == parkingLotId); ;
         }
 
-        public async Task<ServiceResponse> AddParkingLot(string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, Guid cityId, Guid propietaryParkId)
+        public async Task<ServiceResponse> AddParkingLot(string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, string image, Guid cityId, Guid propietaryParkId)
         {
             try
             {
@@ -42,6 +42,7 @@ namespace RRSEASYPARK.Service
                     CantSpacesMotorcycle = cantSpacesMoto,
                     CantSpacesCar = cantSpacesCar,
                     CantSpacesDisability = cantSpacesDisability,
+                    Image = image,
                     CityId = cityId,
                     PropietaryParkId = propietaryParkId
 
