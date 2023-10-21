@@ -12,8 +12,8 @@ using RRSEASYPARK.DAL;
 namespace RRSEASYPARK.Migrations
 {
     [DbContext(typeof(RRSEASYPARKContext))]
-    [Migration("20231004040853_Migration4")]
-    partial class Migration4
+    [Migration("20231016234629_migracion5")]
+    partial class migracion5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,8 +237,8 @@ namespace RRSEASYPARK.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Password")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<Guid>("RolId")
                         .HasColumnType("uniqueidentifier");
