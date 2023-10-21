@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RRSEasyPark.Models;
 using RRSEASYPARK.DAL;
 using RRSEASYPARK.Models;
+using System.Linq;
 
 namespace RRSEASYPARK.Service
 {
@@ -14,24 +15,63 @@ namespace RRSEASYPARK.Service
         {
             _context = context;
         }
-        public async Task<ServiceResponse> AddReservation(DateTime startdate, long totalprice, DateTime enddate, Guid typeVehicleId, Guid parkingLotId, string Disability )
+        public async Task<ServiceResponse> AddReservation(string date, long totalprice,TimeOnly starttime, TimeOnly endtime, Guid typeVehicleId, Guid parkingLotId, string disability)
         {
             try
             {
-                TimeZoneInfo colombiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time"); // Colombia's time zone
+                //TimeZoneInfo colombiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time"); // Colombia's time zone
+
+                var ParkingLot = await _context.parkingLots.FindAsync(parkingLotId);
+                var TypeVehicle = await _context.typeVehicles.FindAsync(typeVehicleId);
+                
+
+                if (ParkingLot == null)
+                {
+                    throw new Exception("ParkingLot is null");
+                }
+
+                if (TypeVehicle == null)
+                {
+                    throw new Exception("TypeVehicle is null");
+                }
+
+
 
                 await _context.reservations.AddAsync(new Reservation()
                 {
                     Id = Guid.NewGuid(),
-                    StartDate = TimeZoneInfo.ConvertTime(startdate, colombiaTimeZone),
-                    EndDate = TimeZoneInfo.ConvertTime(enddate, colombiaTimeZone),
+                    //Date = TimeZoneInfo.ConvertTime(date, colombiaTimeZone),
+                    Date = date.ToString(),
+                    StartTime =starttime.ToString(),
+                    EndTime = endtime.ToString(),
                     TypeVehicleId = typeVehicleId,
                     ParkingLotId = parkingLotId,
-                    Disabled = Disability,
+                    Disabled = disability,
                     TotalPrice = totalprice,
                     ClientParkingLotId = Guid.Parse("847cafcf-dac7-48b0-935d-018b8d0de1fa")
-
                 });
+
+                switch (TypeVehicle.Name)
+                {
+                    case "Carro":                        
+                        if (disability == Enums.DisabilityValues.SI.ToString())
+                        {
+                            //ParkingLot.CantSpacesCar += (int)Enums.NumbersValues.b;
+                            ParkingLot.CantSpacesDisability -= (int)Enums.NumbersValues.b;
+                            break;
+                        }
+                        ParkingLot.CantSpacesCar -= (int)Enums.NumbersValues.b;
+                        break;
+                    case "Moto":
+                        ParkingLot.CantSpacesMotorcycle -= (int)Enums.NumbersValues.b;
+                        break;
+                    default:
+                        Console.WriteLine("Unrecognized vehicle type");
+                        break;
+                }
+
+                _context.parkingLots.Update(ParkingLot);
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse()
@@ -59,7 +99,7 @@ namespace RRSEASYPARK.Service
         {
             return await _context.reservations.Include(x => x.ClientParkingLot).ToListAsync();
         }
-        public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, DateTime startdate, DateTime enddate, long totalPrice, string disabled)
+        public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, string date,TimeOnly startTime, TimeOnly endTime, long totalPrice, string disabled)
         {
             try
             {
@@ -73,8 +113,9 @@ namespace RRSEASYPARK.Service
                     };
                 }
 
-                reservation.StartDate = startdate;
-                reservation.EndDate = enddate;
+                reservation.Date = date.ToString();
+                reservation.StartTime = startTime.ToString();
+                reservation.EndTime = endTime.ToString();
                 reservation.TotalPrice = totalPrice;
                 reservation.Disabled = disabled;
 

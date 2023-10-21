@@ -173,7 +173,7 @@ namespace RRSEASYPARK.Service
 
                     new Claim[]
                     {
-                        new Claim("Id", user.Id.ToString()),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim("Name", user.Name),
                         new Claim("RolId", user.RolId.ToString()),
                         new Claim(ClaimTypes.Role, user.RolName.ToString()),

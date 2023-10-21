@@ -7,6 +7,7 @@ using RRSEASYPARK.Service;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace RRSEASYPARK.ApiControllers
 {
@@ -59,15 +60,16 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        /// 
         [Authorize(Roles = "Client")]
         [HttpPost]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> AddReservation(ReservationPostDto reservationPostDto)
         {
-            
+            var Client = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var ParkingLotSelect = await _parkingLotService.GetParkingLot(reservationPostDto.ParkingLotId);
-            var Price = 0;
+            var Price = (int)Enums.NumbersValues.a;
             if (reservationPostDto.Disability == Enums.DisabilityValues.SI.ToString())
             {
                 Price = ParkingLotSelect.DisabilityPrice;
@@ -76,7 +78,7 @@ namespace RRSEASYPARK.ApiControllers
             {
                 Price = ParkingLotSelect.NormalPrice;
             }
-            var result = await _reservationService.AddReservation(reservationPostDto.StartDate, Price, reservationPostDto.EndDate, reservationPostDto.VehicleType, reservationPostDto.ParkingLotId, reservationPostDto.Disability);
+            var result = await _reservationService.AddReservation(reservationPostDto.Date, Price,reservationPostDto.starttime, reservationPostDto.Endtime, reservationPostDto.VehicleType, reservationPostDto.ParkingLotId, reservationPostDto.Disability);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
@@ -94,7 +96,7 @@ namespace RRSEASYPARK.ApiControllers
         [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> UpdateReservation(ReservationDto reservationDto)
         {
-            var result = await _reservationService.UpdateReservation(reservationDto.Id, reservationDto.StartDate, reservationDto.EndDate, reservationDto.TotalPrice, reservationDto.Disabled);
+            var result = await _reservationService.UpdateReservation(reservationDto.Id, reservationDto.Date, reservationDto.starttime, reservationDto.Endtime, reservationDto.TotalPrice, reservationDto.Disabled);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
