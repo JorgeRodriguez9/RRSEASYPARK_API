@@ -90,6 +90,7 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "200">Customers have been obtained correctly</response>
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
+        /// 
         [AllowAnonymous]
         [HttpPut]
         [ProducesResponseType(typeof(void), 200)]
