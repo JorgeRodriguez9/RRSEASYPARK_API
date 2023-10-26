@@ -12,7 +12,7 @@ namespace RRSEASYPARK.Service
         {
             _context = context;
         }
-        public async Task<ServiceResponse> AddPropietaryPark(string name, long identification, string email, Guid idUser)
+        public async Task<ServiceResponse> AddPropietaryPark(string name, long identification, string email, long telephone, Guid idUser)
         {
             try
             {
@@ -22,6 +22,7 @@ namespace RRSEASYPARK.Service
                     Name = name,
                     Email = email,
                     Identification = identification,
+                    Telephone = telephone,
                     UserId = idUser
 
                 });

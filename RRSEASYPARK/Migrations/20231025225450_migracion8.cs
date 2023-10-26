@@ -5,24 +5,25 @@
 namespace RRSEASYPARK.Migrations
 {
     /// <inheritdoc />
-    public partial class migracion6 : Migration
+    public partial class migracion8 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Image",
-                table: "parkingLots",
-                type: "nvarchar(max)",
-                nullable: true);
+            migrationBuilder.AddColumn<long>(
+                name: "Telephone",
+                table: "propietaryParks",
+                type: "bigint",
+                nullable: false,
+                defaultValue: 0L);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Image",
-                table: "parkingLots");
+                name: "Telephone",
+                table: "propietaryParks");
         }
     }
 }

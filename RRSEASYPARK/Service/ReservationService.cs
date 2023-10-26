@@ -184,6 +184,12 @@ namespace RRSEASYPARK.Service
         {
             return await _context.reservations.Include(x => x.ClientParkingLot).ToListAsync();
         }
+
+        public async Task<IEnumerable<Reservation>> GetReservationsParkingLot(Guid parkingLotId)
+        {
+            return await _context.reservations.Include(x => x.ClientParkingLot).Where(x => x.ParkingLotId == parkingLotId).ToListAsync();
+        }
+        
         public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, string date, string startTime, string endTime, long totalPrice, string disabled)
         {
             try

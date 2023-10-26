@@ -12,8 +12,8 @@ using RRSEASYPARK.DAL;
 namespace RRSEASYPARK.Migrations
 {
     [DbContext(typeof(RRSEASYPARKContext))]
-    [Migration("20231005021051_migracion3")]
-    partial class migracion3
+    [Migration("20231025225450_migracion8")]
+    partial class migracion8
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,6 +95,9 @@ namespace RRSEASYPARK.Migrations
                     b.Property<int>("DisabilityPrice")
                         .HasColumnType("int");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Info")
                         .HasColumnType("nvarchar(max)");
 
@@ -144,6 +147,9 @@ namespace RRSEASYPARK.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<long>("Telephone")
+                        .HasColumnType("bigint");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -163,14 +169,23 @@ namespace RRSEASYPARK.Migrations
                     b.Property<Guid>("ClientParkingLotId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Date")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Disabled")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ParkingLotId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StartTime")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<long>("TotalPrice")
                         .HasColumnType("bigint");
@@ -210,6 +225,9 @@ namespace RRSEASYPARK.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("DisabilityEnable")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -231,8 +249,8 @@ namespace RRSEASYPARK.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("Password")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<Guid>("RolId")
                         .HasColumnType("uniqueidentifier");

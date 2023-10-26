@@ -20,12 +20,17 @@ namespace RRSEASYPARK.Service
             return await _context.parkingLots.Include(x => x.City).ToListAsync();
         }
 
+        public async Task<IEnumerable<ParkingLot>> GetParkingLotsPropietary(Guid user)
+        {
+            var propietary = await _context.propietaryParks.FirstOrDefaultAsync(x => x.UserId == user);
+            return await _context.parkingLots.Where(x => x.PropietaryParkId == propietary.Id).ToListAsync();
+        }
         public async Task<ParkingLot?> GetParkingLot(Guid parkingLotId)
         {
             return await _context.parkingLots.Include(x => x.City).FirstOrDefaultAsync(x => x.Id == parkingLotId); ;
         }
 
-        public async Task<ServiceResponse> AddParkingLot(string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, string image, Guid cityId, Guid user)
+        public async Task<ServiceResponse> AddParkingLot(string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, string disabilityservices, string image, Guid cityId, Guid user)
         {
             try
             {
@@ -45,6 +50,7 @@ namespace RRSEASYPARK.Service
                     CantSpacesMotorcycle = cantSpacesMoto,
                     CantSpacesCar = cantSpacesCar,
                     CantSpacesDisability = cantSpacesDisability,
+                    disabilityservices = disabilityservices,
                     Image = image,
                     CityId = cityId,
                     PropietaryParkId = propietaryGuid
