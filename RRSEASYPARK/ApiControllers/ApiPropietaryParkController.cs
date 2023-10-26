@@ -6,6 +6,7 @@ using RRSEASYPARK.Models;
 using RRSEASYPARK.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using RRSEASYPARK.Models.Request;
 
 namespace RRSEASYPARK.ApiControllers
 {
@@ -15,12 +16,14 @@ namespace RRSEASYPARK.ApiControllers
     {
 
         private readonly IPropietaryParkService _propietaryParkService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public ApiPropietaryParkController(IPropietaryParkService propietaryParkService, IMapper mapper)
+        public ApiPropietaryParkController(IPropietaryParkService propietaryParkService, IMapper mapper, IUserService userService)
         {
             _propietaryParkService = propietaryParkService;
             _mapper = mapper;
+            _userService = userService;
         }
 
         /// <summary>
@@ -50,10 +53,28 @@ namespace RRSEASYPARK.ApiControllers
         [HttpPost]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> AddPropietaryPark(PropietaryParkDto propietaryParkDto)
+        public async Task<IActionResult> AddPropietaryPark(PropietaryParkPostDto propietaryParkDto)
         {
-            var result = await _propietaryParkService.AddPropietaryPark(propietaryParkDto.Name, propietaryParkDto.Identification, propietaryParkDto.Email, propietaryParkDto.UserId);
-            return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
+            ServiceResponse response = new ServiceResponse();
+
+            try {
+
+                var id = Guid.NewGuid();
+
+                var user = await _userService.AddUser(propietaryParkDto.NameUser, propietaryParkDto.Password, propietaryParkDto.Rol, id);
+
+                var result = await _propietaryParkService.AddPropietaryPark(propietaryParkDto.Name, propietaryParkDto.Identification, propietaryParkDto.Email, propietaryParkDto.Telephone, id);
+
+                response.Result = ServiceResponseType.Succeded;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+                return BadRequest(response);
+            }
+
         }
 
         /// <summary>

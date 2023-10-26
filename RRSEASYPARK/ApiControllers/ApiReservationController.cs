@@ -44,6 +44,23 @@ namespace RRSEASYPARK.ApiControllers
             return ReservationsList;
         }
 
+        /// <summary>
+        /// This API method is where we get all the reservations registered in our database depending on the chosen parking lot.
+        /// </summary>
+        /// <returns>A list of reservations</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Propietary Park")]
+        [HttpGet("parkinglot/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<ReservationDto>), 200)]
+        public async Task<IEnumerable<ReservationDto>> GetReservationsParkingLot(Guid id)
+        {
+            var Reservations = await _reservationService.GetReservationsParkingLot(id);
+            var ReservationsList = _mapper.Map<List<Reservation>, List<ReservationDto>>(Reservations.ToList());
+            return ReservationsList;
+        }
+
         //[HttpGet]
         //public async Task<ReservationDto> GetReservation(ReservationDto reservationDto)
         //{
