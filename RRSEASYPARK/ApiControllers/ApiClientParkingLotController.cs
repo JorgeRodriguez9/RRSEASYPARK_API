@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using RRSEasyPark.Models;
 using RRSEASYPARK.Models;
 using RRSEASYPARK.Models.Dto;
+using RRSEASYPARK.Models.Request;
 using RRSEASYPARK.Service;
 
 namespace RRSEASYPARK.ApiControllers
@@ -15,11 +16,12 @@ namespace RRSEASYPARK.ApiControllers
     {
         private readonly IClientParkingLotService _clientParkingLotService;
         private readonly IMapper _mapper;
-
-        public ApiClientParkingLotController(IClientParkingLotService clientParkingLotService, IMapper mapper)
+        private readonly IUserService _userService;
+        public ApiClientParkingLotController(IClientParkingLotService clientParkingLotService, IMapper mapper, IUserService userService)
         {
             _clientParkingLotService = clientParkingLotService;
             _mapper = mapper;
+            _userService = userService;
         }
         /// <summary>
         /// This API method is where we get all the parking customers registered in our database.
@@ -48,10 +50,28 @@ namespace RRSEASYPARK.ApiControllers
         [HttpPost]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> AddClient(ClientParkingLotDto clientParkingLotDto)
+        public async Task<IActionResult> AddClient(ClientParkingLotPostDto clientParkingLotDto)
         {
-            var result = await _clientParkingLotService.AddClientParkingLot(clientParkingLotDto.Name, clientParkingLotDto.Identification, clientParkingLotDto.Email, clientParkingLotDto.Telephone, clientParkingLotDto.UserId);
-            return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
+            ServiceResponse response = new ServiceResponse();
+
+            try
+            {
+                var id = Guid.NewGuid();
+
+                var user = await _userService.AddUser(clientParkingLotDto.NameUser, clientParkingLotDto.Password, clientParkingLotDto.Rol, id);
+
+                var result = await _clientParkingLotService.AddClientParkingLot(clientParkingLotDto.Name, clientParkingLotDto.Identification, clientParkingLotDto.Email, clientParkingLotDto.Telephone, id);
+
+                response.Result = ServiceResponseType.Succeded;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+                return BadRequest(response);
+            }
+         
         }
         /// <summary>
         /// This API method is used to update a client in the database

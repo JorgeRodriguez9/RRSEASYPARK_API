@@ -144,6 +144,9 @@ namespace RRSEASYPARK.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<long>("Telephone")
+                        .HasColumnType("bigint");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 

@@ -41,6 +41,24 @@ namespace RRSEASYPARK.ApiControllers
         }
 
         /// <summary>
+        /// This API method is where we get all the parking lots registered in our database depending on a parking lot owner.
+        /// </summary>
+        /// <returns>A list of parking lots.</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Propietary Park")]
+        [HttpGet("propietario")]
+        [ProducesResponseType(typeof(IEnumerable<ParkingLotDto>), 200)]
+        public async Task<IEnumerable<ParkingLotDto>> GetParkingLotsPropietary()
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var Parks = await _parkingLotService.GetParkingLotsPropietary(Guid.Parse(user));
+            var ParkingLotList = _mapper.Map<List<ParkingLot>, List<ParkingLotDto>>(Parks.ToList());
+            return ParkingLotList;
+        }
+
+        /// <summary>
         /// This API method is used to add a parking lot to the database
         /// </summary>
         /// <param name="id"></param>

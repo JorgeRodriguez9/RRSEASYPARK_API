@@ -14,7 +14,6 @@ namespace RRSEasyPark.Models
         [MaxLength(60)] 
         public string? Email { get; set; } = string.Empty;
         public long Telephone { get; set; }
-        //public string? Disability { get; set; } = string.Empty;
         public Guid UserId { get; set; }
         public virtual User? User { get; set; }
     }

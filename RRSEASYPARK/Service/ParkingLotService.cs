@@ -20,6 +20,11 @@ namespace RRSEASYPARK.Service
             return await _context.parkingLots.Include(x => x.City).ToListAsync();
         }
 
+        public async Task<IEnumerable<ParkingLot>> GetParkingLotsPropietary(Guid user)
+        {
+            var propietary = await _context.propietaryParks.FirstOrDefaultAsync(x => x.UserId == user);
+            return await _context.parkingLots.Where(x => x.PropietaryParkId == propietary.Id).ToListAsync();
+        }
         public async Task<ParkingLot?> GetParkingLot(Guid parkingLotId)
         {
             return await _context.parkingLots.Include(x => x.City).FirstOrDefaultAsync(x => x.Id == parkingLotId); ;

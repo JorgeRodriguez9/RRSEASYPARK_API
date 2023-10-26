@@ -29,16 +29,30 @@ namespace RRSEASYPARK.Service
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse> AddUser(string name, string password, Guid RolId)
+        public async Task<ServiceResponse> AddUser(string name, string password, string rol, Guid id)
         {
+      
             try
             {
+                var rolId = new Rol();
+
+                if (rol == "Propietary Park")
+                {
+                    rolId = _context.rols.FirstOrDefault();
+                }
+                else
+                {
+                    rolId = _context.rols.Skip(1).FirstOrDefault();
+                }
+
+                string spassword = Encrypt.GetSHA256(password);
+
                 await _context.users.AddAsync(new User()
                 {
-                    Id = Guid.NewGuid(),
+                    Id = id,
                     Name = name,
-                    Password = password,
-                    RolId = RolId
+                    Password = spassword,
+                    RolId = rolId.Id
                 });
                 await _context.SaveChangesAsync();
 
