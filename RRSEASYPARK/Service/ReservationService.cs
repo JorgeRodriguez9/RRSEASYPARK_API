@@ -37,7 +37,13 @@ namespace RRSEASYPARK.Service
                     throw new Exception("TypeVehicle is null");
                 }
 
+                //Variables
                 var test = 1;
+                DateTime requestedDate = DateTime.ParseExact(date, "MM-dd-yyyy", null); //28
+                DateOnly requestedDateOnly = DateOnly.FromDateTime(requestedDate);
+                DateTime currentDate = DateTime.Now;                
+                DateOnly CurrentDateOnly = DateOnly.FromDateTime(currentDate); //25
+                
 
                 switch (TypeVehicle.Name)
                 {
@@ -82,6 +88,26 @@ namespace RRSEASYPARK.Service
                         break;
                 }
 
+                //Validation so that the date stated is greater than the present one
+                if (requestedDateOnly <= CurrentDateOnly)
+                {
+                    return new ServiceResponse()
+                    {
+                        Result = ServiceResponseType.Failed,
+                        ErrorMessage = "Select a future date"
+                    };
+                }
+
+                //Validation so that the start time is not greater than the end time
+                if (starttime >= endtime)
+                {
+                    return new ServiceResponse()
+                    {
+                        Result = ServiceResponseType.Failed,
+                        ErrorMessage = "Hours not allowed"
+                    };
+                }
+
                 var Reservations = await _context.reservations.Where(x => x.ParkingLotId == parkingLotId && x.Date == date).ToListAsync();
 
                 if (!ValidateReservation(Reservations, starttime, endtime, test))
@@ -104,7 +130,9 @@ namespace RRSEASYPARK.Service
                     ParkingLotId = parkingLotId,
                     Disabled = disability,
                     TotalPrice = totalprice,
-                    ClientParkingLotId = Guid.Parse("f70cf415-4647-4de2-9b8a-5cfffad8b090")
+                    //ClientParkingLotId = Guid.Parse("f70cf415-4647-4de2-9b8a-5cfffad8b090") // Carlos
+                    ClientParkingLotId = Guid.Parse("847CAFCF-DAC7-48B0-935D-018B8D0DE1FA") // Jorge
+
 
                 });
 
@@ -161,7 +189,8 @@ namespace RRSEASYPARK.Service
         {
             return await _context.reservations.Include(x => x.ClientParkingLot).Where(x => x.ParkingLotId == parkingLotId).ToListAsync();
         }
-        public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, string date, TimeOnly startTime, TimeOnly endTime, long totalPrice, string disabled)
+        
+        public async Task<ServiceResponse> UpdateReservation(Guid ReservationId, string date, string startTime, string endTime, long totalPrice, string disabled)
         {
             try
             {
@@ -236,6 +265,7 @@ namespace RRSEASYPARK.Service
 
         public bool ValidateReservation(IEnumerable<Reservation> reservations, TimeOnly starttime, TimeOnly endtime, int test)
         {
+
             if (reservations.Count() == 0)
             {
                 return true;

@@ -9,7 +9,7 @@ namespace RRSEASYPARK.Service
         Task<Reservation?> GetReservation(Guid ReservationId);
         Task<IEnumerable<Reservation>> GetReservations();
         Task<IEnumerable<Reservation>> GetReservationsParkingLot(Guid parkingLotId);
-        Task<ServiceResponse> UpdateReservation(Guid ReservationId, string date,TimeOnly starttime, TimeOnly enddate, long totalPrice, string disabled);
+        Task<ServiceResponse> UpdateReservation(Guid ReservationId, string date,string starttime, string enddate, long totalPrice, string disabled);
         Task<ServiceResponse?> DeleteReservation(Guid ReservationId);
     }
 }
