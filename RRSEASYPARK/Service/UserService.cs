@@ -35,19 +35,23 @@ namespace RRSEASYPARK.Service
             try
             {
                 var rolId = new Rol();
+                var ProPar = await _context.rols.FirstOrDefaultAsync();
+                
 
                 if (rol == "Propietary Park")
                 {
-                    rolId = _context.rols.FirstOrDefault();
+                    rolId = ProPar;
                 }
+
                 else
                 {
-                    rolId = _context.rols.Skip(1).FirstOrDefault();
+                    rolId = await _context.rols.Skip(1).FirstOrDefaultAsync();
                 }
 
                 string spassword = Encrypt.GetSHA256(password);
 
                 await _context.users.AddAsync(new User()
+
                 {
                     Id = id,
                     Name = name,
@@ -151,14 +155,14 @@ namespace RRSEASYPARK.Service
             }
         }
 
-        public UserResponse Auth(AuthRequest model)
+        public async Task<UserResponse> Auth(AuthRequest model)
         {
 
             UserResponse userresponse = new UserResponse();
 
             string spassword = Encrypt.GetSHA256(model.Password);
 
-            var user = _context.users.Where(c => c.Name == model.nameUser && c.Password == spassword).Include(x => x.Rol).FirstOrDefault();
+            var user = await _context.users.Where(c => c.Name == model.nameUser && c.Password == spassword).Include(x => x.Rol).FirstOrDefaultAsync();
 
             if (user == null)
             {

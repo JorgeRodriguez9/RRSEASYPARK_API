@@ -14,7 +14,7 @@ namespace RRSEASYPARK.Service
         Task<IEnumerable<User>> GetUser();
         Task<ServiceResponse> UpdateUser(Guid UserId, string name, string password);
         Task<ServiceResponse?> DeleteUser(Guid UserId);
-        UserResponse Auth(AuthRequest model);
+        Task<UserResponse> Auth(AuthRequest model);
 
     }
 }
