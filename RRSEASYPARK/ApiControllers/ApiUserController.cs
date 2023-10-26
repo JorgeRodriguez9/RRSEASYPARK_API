@@ -51,7 +51,7 @@ namespace RRSEASYPARK.ApiControllers
             try
             {
               
-                var userresponse = _userService.Auth(user);
+                var userresponse = await _userService.Auth(user);
 
                 if (userresponse == null)
                 {
