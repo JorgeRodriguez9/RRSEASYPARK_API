@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RRSEasyPark.Models;
 using RRSEASYPARK.DAL;
+using RRSEASYPARK.Enums;
 using RRSEASYPARK.Models;
 using System.Linq;
 
@@ -38,16 +39,18 @@ namespace RRSEASYPARK.Service
                 }
 
                 //Variables
-                var test = 1;
+                var test = (int)Enums.NumbersValues.b;
+                
                 DateTime requestedDate = DateTime.ParseExact(date, "MM-dd-yyyy", null); //28
                 DateOnly requestedDateOnly = DateOnly.FromDateTime(requestedDate);
                 DateTime currentDate = DateTime.Now;                
                 DateOnly CurrentDateOnly = DateOnly.FromDateTime(currentDate); //25
-                
+
+                TimeOnly CurrentTimeOnly = TimeOnly.FromDateTime(currentDate);
 
                 switch (TypeVehicle.Name)
-                {
-                    case "Carro":
+                {                    
+                    case Enums.ConstValues.Cr:
                         if (disability == Enums.DisabilityValues.SI.ToString())
                         {
                             //ParkingLot.CantSpacesCar += (int)Enums.NumbersValues.b;
@@ -58,7 +61,7 @@ namespace RRSEASYPARK.Service
                                 //    Result = ServiceResponseType.Failed,
                                 //    ErrorMessage = "there are no available spaces"
                                 //};
-                                test = 0;
+                                test = (int)Enums.NumbersValues.a;
                             }
                             break;
                         }
@@ -69,10 +72,10 @@ namespace RRSEASYPARK.Service
                             //    Result = ServiceResponseType.Failed,
                             //    ErrorMessage = "there are no available spaces"
                             //};
-                            test = 0;
+                            test = (int)Enums.NumbersValues.a;
                         }
                         break;
-                    case "Moto":
+                    case Enums.ConstValues.Mt:
                         if (ParkingLot.CantSpacesMotorcycle <= (int)Enums.NumbersValues.a)
                         {
                             //return new ServiceResponse()
@@ -80,7 +83,7 @@ namespace RRSEASYPARK.Service
                             //    Result = ServiceResponseType.Failed,
                             //    ErrorMessage = "there are no available spaces"
                             //};
-                            test = 0;
+                            test = (int)Enums.NumbersValues.a;
                         }
                         break;
                     default:
@@ -89,12 +92,21 @@ namespace RRSEASYPARK.Service
                 }
 
                 //Validation so that the date stated is greater than the present one
-                if (requestedDateOnly <= CurrentDateOnly)
+                if (requestedDateOnly < CurrentDateOnly)
                 {
                     return new ServiceResponse()
                     {
                         Result = ServiceResponseType.Failed,
                         ErrorMessage = "Select a future date"
+                    };
+                }
+                //This validation is to not allow registrations at hours less than this
+                if (starttime <= CurrentTimeOnly)
+                {
+                    return new ServiceResponse()
+                    {
+                        Result = ServiceResponseType.Failed,
+                        ErrorMessage = "Select a future hour"
                     };
                 }
 
@@ -130,15 +142,17 @@ namespace RRSEASYPARK.Service
                     ParkingLotId = parkingLotId,
                     Disabled = disability,
                     TotalPrice = totalprice,
-                    ClientParkingLotId = Guid.Parse("3613d3a7-e749-4754-9cf2-aa9813720294") // Carlos
-                    //ClientParkingLotId = Guid.Parse("847CAFCF-DAC7-48B0-935D-018B8D0DE1FA") // Jorge
+
+                    //ClientParkingLotId = Guid.Parse("3613d3a7-e749-4754-9cf2-aa9813720294") // Carlos
+                    ClientParkingLotId = Guid.Parse("2BAA7CF8-B6E3-4FE1-9316-8E294507C5D4") // Jorge
 
 
                 });
 
+                // This switch is to subtract the number of spaces depending on the reservation made
                 switch (TypeVehicle.Name)
                 {
-                    case "Carro":
+                    case Enums.ConstValues.Cr:
                         if (disability == Enums.DisabilityValues.SI.ToString())
                         {
                             //ParkingLot.CantSpacesCar += (int)Enums.NumbersValues.b;
@@ -147,7 +161,7 @@ namespace RRSEASYPARK.Service
                         }
                         ParkingLot.CantSpacesCar -= (int)Enums.NumbersValues.b;
                         break;
-                    case "Moto":
+                    case Enums.ConstValues.Mt:
                         ParkingLot.CantSpacesMotorcycle -= (int)Enums.NumbersValues.b;
                         break;
                     default:
@@ -266,12 +280,12 @@ namespace RRSEASYPARK.Service
         public bool ValidateReservation(IEnumerable<Reservation> reservations, TimeOnly starttime, TimeOnly endtime, int test)
         {
 
-            if (reservations.Count() == 0)
+            if (reservations.Count() == (int)Enums.NumbersValues.a)
             {
                 return true;
             }
 
-            if (test == 1)
+            if (test == (int)Enums.NumbersValues.b)
             {
                 return true;
             }
