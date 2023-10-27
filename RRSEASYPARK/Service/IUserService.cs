@@ -3,6 +3,7 @@ using RRSEASYPARK.Models;
 using RRSEASYPARK.Models.Dto;
 using RRSEASYPARK.Models.Request;
 using RRSEASYPARK.Models.Response;
+using RRSEASYPARK.Models.ViewModel;
 
 namespace RRSEASYPARK.Service
 {
@@ -15,6 +16,9 @@ namespace RRSEASYPARK.Service
         Task<ServiceResponse> UpdateUser(Guid UserId, string name, string password);
         Task<ServiceResponse?> DeleteUser(Guid UserId);
         Task<UserResponse> Auth(AuthRequest model);
+        Task<ServiceResponse> StarRecovery(RecoveryViewModel model);
+        Task<ServiceResponse> RecoveryPassword(RecoveryPasswordViewModel model);
+        public Task<ServiceResponse> ValidationToken(string token);
 
     }
 }

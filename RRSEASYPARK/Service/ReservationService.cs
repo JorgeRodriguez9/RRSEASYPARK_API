@@ -142,8 +142,10 @@ namespace RRSEASYPARK.Service
                     ParkingLotId = parkingLotId,
                     Disabled = disability,
                     TotalPrice = totalprice,
-                    //ClientParkingLotId = Guid.Parse("f70cf415-4647-4de2-9b8a-5cfffad8b090") // Carlos
+
+                    //ClientParkingLotId = Guid.Parse("3613d3a7-e749-4754-9cf2-aa9813720294") // Carlos
                     ClientParkingLotId = Guid.Parse("2BAA7CF8-B6E3-4FE1-9316-8E294507C5D4") // Jorge
+
 
                 });
 

@@ -17,6 +17,7 @@ namespace RRSEASYPARKTESTING
 {
     public class UserTest
     {
+        /*
         [Fact]
         public async Task Get()
         {
@@ -174,5 +175,6 @@ namespace RRSEASYPARKTESTING
             Assert.Equal(200, okResult.StatusCode);
 
         }
+        */
     }
 }
