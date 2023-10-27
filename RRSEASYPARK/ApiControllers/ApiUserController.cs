@@ -7,6 +7,7 @@ using RRSEASYPARK.Service;
 using AutoMapper;
 using RRSEASYPARK.Models.Request;
 using Azure;
+using RRSEASYPARK.Models.ViewModel;
 
 namespace RRSEASYPARK.ApiControllers
 {
@@ -71,6 +72,99 @@ namespace RRSEASYPARK.ApiControllers
                 return BadRequest(response);
             }
            
+        }
+
+        [HttpPost("Recovery")]
+        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> StartRecovery(RecoveryViewModel model)
+        {
+
+            ServiceResponse response = new ServiceResponse();
+            try
+            {
+                if(!ModelState.IsValid)
+                {
+                    response.ErrorMessage = "Correo Invalido";
+                    response.Result = ServiceResponseType.Failed;
+                    return BadRequest(response);
+                }
+
+                response = await _userService.StarRecovery(model);
+
+                response.Data = model;             
+                
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+                return BadRequest(response);
+            }
+
+        }
+
+        [HttpPost("RecoveryPassword")]
+        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> RecoveryPassword(RecoveryPasswordViewModel model)
+        {
+
+            ServiceResponse response = new ServiceResponse();
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    response.ErrorMessage = "Modelo requerido Correctamente";
+                    response.Result = ServiceResponseType.Failed;
+                    return BadRequest(response);
+                }
+
+                response = await _userService.RecoveryPassword(model);
+
+                response.Data = model;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+                response.Result = ServiceResponseType.Failed;
+                return BadRequest(response);
+            }
+
+        }
+
+        [HttpPost("Validation")]
+        [ProducesResponseType(typeof(void), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> Validation(TokenViewModel token)
+        {
+
+            ServiceResponse response = new ServiceResponse();
+            try
+            {
+                if (token == null)
+                {
+                    response.ErrorMessage = "Modelo requerido Correctamente";
+                    response.Result = ServiceResponseType.Failed;
+                    return BadRequest(response);
+                }
+
+                response = await _userService.ValidationToken(token.Token);
+
+                response.Data = token;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.Message;
+                response.Result = ServiceResponseType.Failed;
+                return BadRequest(response);
+            }
+
         }
 
         /// <summary>
