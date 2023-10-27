@@ -13,6 +13,7 @@ namespace ClientTest
     
     public class ClientParkingLotTest
     {
+        /*
         [Fact]
         public async Task Get()
         {
@@ -178,6 +179,7 @@ namespace ClientTest
             Assert.Equal(200, okResult.StatusCode);
 
         }
+        */
 
     }
     

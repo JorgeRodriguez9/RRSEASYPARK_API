@@ -11,6 +11,7 @@ namespace RRSEasyPark.Models
         public string Name { get; set; } = string.Empty;
         [MaxLength(256)]
         public string? Password { get; set; } = string.Empty;
+        public string? Token_Recovery {  get; set; } = string.Empty;
         public Guid RolId { get; set; }
         public virtual Rol? Rol { get; set; }
     }
