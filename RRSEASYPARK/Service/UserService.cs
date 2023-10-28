@@ -63,7 +63,8 @@ namespace RRSEASYPARK.Service
                     Id = id,
                     Name = name,
                     Password = spassword,
-                    RolId = rolId.Id
+                    RolId = rolId.Id,
+                    Token_Recovery = null
                 });
                 await _context.SaveChangesAsync();
 
@@ -173,6 +174,7 @@ namespace RRSEASYPARK.Service
 
             if (user == null)
             {
+
                 return null;
             }
 
