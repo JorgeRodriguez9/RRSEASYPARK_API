@@ -58,7 +58,7 @@ namespace RRSEASYPARK.ApiControllers
                 {
                     response.Result = ServiceResponseType.Failed;
                     response.ErrorMessage = "Usuario o contraseña incorrecta";
-                    return BadRequest();
+                    return Ok(response);
                 }
 
                 response.Result = ServiceResponseType.Succeded;

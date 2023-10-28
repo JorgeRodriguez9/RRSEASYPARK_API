@@ -8,6 +8,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using RRSEASYPARK.Models.Response;
 
 namespace RRSEASYPARK.ApiControllers
 {
@@ -41,6 +42,24 @@ namespace RRSEASYPARK.ApiControllers
         {
             var Reservations = await _reservationService.GetReservations();
             var ReservationsList = _mapper.Map<List<Reservation>, List<ReservationDto>>(Reservations.ToList());
+            return ReservationsList;
+        }
+
+        /// <summary>
+        /// This API method is where we get all the reservations registered in our database for client.
+        /// </summary>
+        /// <returns>A list of reservations</returns>
+        /// <response code= "200">Customers have been obtained correctly</response>
+        /// <response code= "400">The server cannot satisfy a request</response>
+        /// <response code= "500">Database connection failure</response>
+        [Authorize(Roles = "Client")]
+        [HttpGet("clientGet")]
+        [ProducesResponseType(typeof(IEnumerable<ReservationDto>), 200)]
+        public async Task<IEnumerable<ReservationResponse>> GetReservationsClient()
+        {
+            var user = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var Reservations = await _reservationService.GetReservationsClient(Guid.Parse(user));
+            var ReservationsList = _mapper.Map<List<Reservation>, List<ReservationResponse>>(Reservations.ToList());
             return ReservationsList;
         }
 
@@ -95,7 +114,7 @@ namespace RRSEASYPARK.ApiControllers
             {
                 Price = ParkingLotSelect.NormalPrice;
             }
-            var result = await _reservationService.AddReservation(reservationPostDto.Date, Price,reservationPostDto.starttime, reservationPostDto.Endtime, reservationPostDto.VehicleType, reservationPostDto.ParkingLotId, reservationPostDto.Disability);
+            var result = await _reservationService.AddReservation(reservationPostDto.Date, Price,reservationPostDto.starttime, reservationPostDto.Endtime, reservationPostDto.VehicleType, reservationPostDto.ParkingLotId, reservationPostDto.Disability, Guid.Parse(Client));
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 
@@ -127,12 +146,12 @@ namespace RRSEASYPARK.ApiControllers
         /// <response code= "400">The server cannot satisfy a request</response>
         /// <response code= "500">Database connection failure</response>
         [AllowAnonymous]
-        [HttpDelete]
+        [HttpDelete("reservation/{id}")]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> DeleteReservation(ReservationDto reservationDto)
+        public async Task<IActionResult> DeleteReservation(Guid id)
         {
-            var result = await _reservationService.DeleteReservation(reservationDto.Id);
+            var result = await _reservationService.DeleteReservation(id);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
     }

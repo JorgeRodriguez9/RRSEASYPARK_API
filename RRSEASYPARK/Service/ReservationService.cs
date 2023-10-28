@@ -7,6 +7,7 @@ using RRSEASYPARK.DAL;
 using RRSEASYPARK.Enums;
 using RRSEASYPARK.Models;
 using System.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RRSEASYPARK.Service
 {
@@ -18,7 +19,7 @@ namespace RRSEASYPARK.Service
         {
             _context = context;
         }
-        public async Task<ServiceResponse> AddReservation(string date, long totalprice, TimeOnly starttime, TimeOnly endtime, Guid typeVehicleId, Guid parkingLotId, string disability)
+        public async Task<ServiceResponse> AddReservation(string date, long totalprice, TimeOnly starttime, TimeOnly endtime, Guid typeVehicleId, Guid parkingLotId, string disability, Guid idUser)
         {
             try
             {
@@ -101,15 +102,18 @@ namespace RRSEASYPARK.Service
                     };
                 }
                 //This validation is to not allow registrations at hours less than this
-                if (starttime <= CurrentTimeOnly)
+                if(requestedDateOnly == CurrentDateOnly)
                 {
-                    return new ServiceResponse()
+                    if (starttime <= CurrentTimeOnly)
                     {
-                        Result = ServiceResponseType.Failed,
-                        ErrorMessage = "Select a future hour"
-                    };
+                        return new ServiceResponse()
+                        {
+                            Result = ServiceResponseType.Failed,
+                            ErrorMessage = "Select a future hour"
+                        };
+                    }
                 }
-
+              
                 //Validation so that the start time is not greater than the end time
                 if (starttime >= endtime)
                 {
@@ -131,10 +135,11 @@ namespace RRSEASYPARK.Service
                     };
                 }
 
+                var client = await _context.ClientParkingLot.FirstOrDefaultAsync(x => x.UserId == idUser);
+
                 await _context.reservations.AddAsync(new Reservation()
                 {
                     Id = Guid.NewGuid(),
-                    //Date = TimeZoneInfo.ConvertTime(date, colombiaTimeZone),
                     Date = date.ToString(),
                     StartTime = starttime.ToString(),
                     EndTime = endtime.ToString(),
@@ -142,9 +147,7 @@ namespace RRSEASYPARK.Service
                     ParkingLotId = parkingLotId,
                     Disabled = disability,
                     TotalPrice = totalprice,
-
-                    //ClientParkingLotId = Guid.Parse("3613d3a7-e749-4754-9cf2-aa9813720294") // Carlos
-                    ClientParkingLotId = Guid.Parse("2BAA7CF8-B6E3-4FE1-9316-8E294507C5D4") // Jorge
+                    ClientParkingLotId = client.Id
 
 
                 });
@@ -197,6 +200,57 @@ namespace RRSEASYPARK.Service
         public async Task<IEnumerable<Reservation>> GetReservations()
         {
             return await _context.reservations.Include(x => x.ClientParkingLot).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reservation>> GetReservationsClient(Guid idUser)
+        {
+            DateTime currentDate = DateTime.Now;
+            DateOnly CurrentDateOnly = DateOnly.FromDateTime(currentDate);
+            TimeOnly CurrentTimeOnly = TimeOnly.FromDateTime(currentDate);
+
+            var list = new List<Reservation>();
+            var client = await _context.ClientParkingLot.FirstOrDefaultAsync(x => x.UserId == idUser);
+            var agents = await _context.reservations.Include(x => x.ParkingLot).Where(x => x.ClientParkingLotId == client.Id).ToListAsync();
+
+            foreach (var agent in agents)
+            {
+                DateTime requestedDate = DateTime.ParseExact(agent.Date, "MM-dd-yyyy", null);
+                DateOnly requestedDateOnly = DateOnly.FromDateTime(requestedDate);
+                var startime = TimeOnly.Parse(agent.StartTime);
+                var cont = (int)Enums.NumbersValues.a;
+
+                //DateTime fechaDt = DateTime.ParseExact(agent.Date, "yyyy-MM-dd", null);
+                //DateTime horaDt = DateTime.ParseExact(agent.StartTime, "hh:mm tt", null);
+
+                //// Combinar la fecha y la hora
+                //DateTime fechaHoraDt = fechaDt.Date + horaDt.TimeOfDay;
+
+                //if(fechaHoraDt >= currentDate)
+                //{
+                //    list.Add(agent);
+                //}
+
+                
+                if (requestedDateOnly >= CurrentDateOnly)
+                {
+                    if (requestedDateOnly == CurrentDateOnly)
+                    {
+                        if (startime >= CurrentTimeOnly)
+                        {
+                            list.Add(agent);
+                        }
+                        cont = (int)Enums.NumbersValues.b;
+                    }
+                    if(cont == (int)Enums.NumbersValues.a)
+                    {
+                        list.Add(agent);
+                    }
+                }
+                
+            }
+
+            return list;
+
         }
 
         public async Task<IEnumerable<Reservation>> GetReservationsParkingLot(Guid parkingLotId)
@@ -309,5 +363,6 @@ namespace RRSEASYPARK.Service
             return false;
         }
 
+       
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Razor.Language.CodeGeneration;
 using RRSEasyPark.Models;
 using RRSEASYPARK.Models.Dto;
 using RRSEASYPARK.Models.Request;
+using RRSEASYPARK.Models.Response;
 using System.Runtime.InteropServices;
 
 namespace RRSEASYPARK.Utilities
@@ -27,6 +28,10 @@ namespace RRSEASYPARK.Utilities
             opt => opt.MapFrom(origen => origen.ClientParkingLot.Telephone));
 
             CreateMap<User, UserDto>();
+
+            CreateMap<Reservation, ReservationResponse>().ForMember(destiny => destiny.ParkingLotName,
+                opt => opt.MapFrom(origen => origen.ParkingLot.Name)).ForMember(destiny => destiny.Adress,
+                opt => opt.MapFrom(origen => origen.ParkingLot.Adress));
 
             CreateMap<User, UserRequest>().ForMember(destiny => destiny.RolName, opt => opt.MapFrom(origen => origen.Rol.Name));
 
