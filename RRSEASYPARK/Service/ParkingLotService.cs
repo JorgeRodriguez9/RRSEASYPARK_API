@@ -74,7 +74,7 @@ namespace RRSEASYPARK.Service
             }
         }
 
-        public async Task<ServiceResponse> UpdateParkingLot(Guid parkingLotId, string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability)
+        public async Task<ServiceResponse> UpdateParkingLot(Guid parkingLotId, string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, string disabilityservices, string image, Guid cityId)
         {
             try
             {
@@ -93,10 +93,13 @@ namespace RRSEASYPARK.Service
                 parkingLot.Telephone = telefhone;
                 parkingLot.NormalPrice = price;
                 parkingLot.DisabilityPrice = disabilityPrice;
+                parkingLot.Image = image;
                 parkingLot.Info = info;
                 parkingLot.CantSpacesMotorcycle = cantSpacesMoto;
                 parkingLot.CantSpacesCar = cantSpacesCar;
                 parkingLot.CantSpacesDisability = cantSpacesDisability;
+                parkingLot.disabilityservices = disabilityservices;
+                parkingLot.CityId = cityId;
 
                 _context.parkingLots.Update(parkingLot);
 
