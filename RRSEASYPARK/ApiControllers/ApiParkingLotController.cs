@@ -107,9 +107,9 @@ namespace RRSEASYPARK.ApiControllers
         [HttpPut]
         [ProducesResponseType(typeof(void), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public async Task<IActionResult> UpdateParkingLot([FromBody] ParkingLotDto parkingLotDto)
+        public async Task<IActionResult> UpdateParkingLot(ParkingUpdateDto parkingLotDto)
         {
-            var result = await _parkingLotService.UpdateParkingLot(parkingLotDto.Id, parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability);
+            var result = await _parkingLotService.UpdateParkingLot(parkingLotDto.Id, parkingLotDto.Name, parkingLotDto.Adress, parkingLotDto.Nit, parkingLotDto.Telephone, parkingLotDto.NormalPrice, parkingLotDto.DisabilityPrice, parkingLotDto.Info, parkingLotDto.CantSpacesMotorcycle, parkingLotDto.CantSpacesCar, parkingLotDto.CantSpacesDisability, parkingLotDto.disabilityservices, parkingLotDto.Image, parkingLotDto.CityId);
             return result.Result == ServiceResponseType.Succeded ? Ok() : BadRequest(result.ErrorMessage);
         }
 

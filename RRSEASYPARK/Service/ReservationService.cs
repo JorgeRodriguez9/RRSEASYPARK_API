@@ -218,18 +218,6 @@ namespace RRSEASYPARK.Service
                 DateOnly requestedDateOnly = DateOnly.FromDateTime(requestedDate);
                 var startime = TimeOnly.Parse(agent.StartTime);
                 var cont = (int)Enums.NumbersValues.a;
-
-                //DateTime fechaDt = DateTime.ParseExact(agent.Date, "yyyy-MM-dd", null);
-                //DateTime horaDt = DateTime.ParseExact(agent.StartTime, "hh:mm tt", null);
-
-                //// Combinar la fecha y la hora
-                //DateTime fechaHoraDt = fechaDt.Date + horaDt.TimeOfDay;
-
-                //if(fechaHoraDt >= currentDate)
-                //{
-                //    list.Add(agent);
-                //}
-
                 
                 if (requestedDateOnly >= CurrentDateOnly)
                 {
