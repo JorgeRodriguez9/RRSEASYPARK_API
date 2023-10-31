@@ -13,11 +13,12 @@ namespace ClientTest
     
     public class ClientParkingLotTest
     {
-        /*
+        
         [Fact]
         public async Task Get()
         {
-            // Arrange
+           
+
             var mockRepositorio = new Mock<IClientParkingLotService>();
             mockRepositorio.Setup(repo => repo.GetClientParkingLots())
                           .Returns(Task.FromResult<IEnumerable<ClientParkingLot>>(new List<ClientParkingLot>
@@ -42,10 +43,31 @@ namespace ClientTest
                           },
                           }));
 
+            var mockUser = new Mock<IUserService>();
+            mockUser.Setup(repo => repo.GetUser())
+                          .Returns(Task.FromResult<IEnumerable<User>>(new List<User>
+                          {
+                              new User
+                          {
+                              Id = Guid.NewGuid(),
+                              Name = "User0",
+                              Password = "JEJEJE",
+                              RolId = Guid.NewGuid(),
+                              
+                          },
+                          new User
+                          {
+                             Id = Guid.NewGuid(),
+                              Name = "User1",
+                              Password = "JEJEJE",
+                              RolId = Guid.NewGuid()
+                          },
+                          }));
+
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
 
-            var getClient = new ApiClientParkingLotController(mockRepositorio.Object, mapper);
+            var getClient = new ApiClientParkingLotController(mockRepositorio.Object, mapper, mockUser.Object);
 
             // Act
             var result = await getClient.GetClients();
@@ -60,6 +82,7 @@ namespace ClientTest
         public async Task post()
         {
             // Arrange
+            var mockUser = new Mock<IUserService>();
             var mockClienteService = new Mock<IClientParkingLotService>();
 
 
@@ -77,17 +100,26 @@ namespace ClientTest
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Cliente agregado exitosamente"
              });
-            var clienteController = new ApiClientParkingLotController(mockClienteService.Object, mapper);
+            mockUser.Setup(service => service.AddUser(It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+           It.IsAny<Guid>())).ReturnsAsync((string name, string password, string rol, Guid id) =>
+           new ServiceResponse
+           {
+               Result = ServiceResponseType.Succeded,
+               InformationMessage = "Cliente agregado exitosamente"
+           });
+            var clienteController = new ApiClientParkingLotController(mockClienteService.Object, mapper, mockUser.Object);
 
             // Act
-            var nuevoClienteDto = new ClientParkingLotDto
+            var nuevoClienteDto = new ClientParkingLotPostDto
             {
-                Id = Guid.NewGuid(),
+                
                 Name = "Nuevo Cliente",
                 Identification = 555555555,
                 Email = "nuevo@cliente.com",
-                Telephone = 555555555,
-                UserId = Guid.NewGuid()
+                Telephone = 555555555
+                
             };
 
             var result = await clienteController.AddClient(nuevoClienteDto);
@@ -106,7 +138,7 @@ namespace ClientTest
         {
             // Arrange
             var mockClienteService = new Mock<IClientParkingLotService>();
-
+            var mockUser = new Mock<IUserService>();
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
@@ -121,7 +153,15 @@ namespace ClientTest
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Cliente actualizado exitosamente"
              });
-            var clienteController = new ApiClientParkingLotController(mockClienteService.Object, mapper);
+            mockUser.Setup(service => service.UpdateUser(It.IsAny<Guid>(),
+           It.IsAny<string>(),
+           It.IsAny<string>())).ReturnsAsync((Guid id, string name, string password) =>
+          new ServiceResponse
+          {
+              Result = ServiceResponseType.Succeded,
+              InformationMessage = "Cliente agregado exitosamente"
+          });
+            var clienteController = new ApiClientParkingLotController(mockClienteService.Object, mapper, mockUser.Object);
 
             // Act
             var ClienteDto = new ClientParkingLotDto
@@ -149,6 +189,7 @@ namespace ClientTest
         {
             // Arrange
             var mockClienteService = new Mock<IClientParkingLotService>();
+            var mockUser = new Mock<IUserService>();
 
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
@@ -161,7 +202,13 @@ namespace ClientTest
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Cliente eliminado exitosamente"
              });
-            var clienteController = new ApiClientParkingLotController(mockClienteService.Object, mapper);
+            mockUser.Setup(service => service.DeleteUser(It.IsAny<Guid>())).ReturnsAsync(
+             new ServiceResponse
+             {
+                 Result = ServiceResponseType.Succeded,
+                 InformationMessage = "Cliente eliminado exitosamente"
+             });
+            var clienteController = new ApiClientParkingLotController(mockClienteService.Object, mapper, mockUser.Object);
 
             // Act
             var ClienteDto = new ClientParkingLotDto
@@ -179,7 +226,7 @@ namespace ClientTest
             Assert.Equal(200, okResult.StatusCode);
 
         }
-        */
+        
 
     }
     
