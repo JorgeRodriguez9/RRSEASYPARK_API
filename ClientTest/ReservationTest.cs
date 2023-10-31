@@ -17,7 +17,7 @@ namespace RRSEASYPARKTESTING
 {
     public class ReservationTest
     {
-        /*
+        
         [Fact]
         public async Task Get()
         {
@@ -29,8 +29,7 @@ namespace RRSEASYPARKTESTING
                               new Reservation
                           {
                               Id = Guid.NewGuid(),
-                              EndDate = DateTime.Now,
-                              StartDate = DateTime.Now,
+                              Date = (DateTime.Now).ToString(),
                               TotalPrice = 20000,
                               Disabled = "SI",
                               ClientParkingLotId = Guid.NewGuid(),
@@ -40,8 +39,7 @@ namespace RRSEASYPARKTESTING
                           new Reservation
                           {
                               Id = Guid.NewGuid(),
-                              EndDate = DateTime.Now,
-                              StartDate = DateTime.Now,
+                              Date = (DateTime.Now).ToString(),
                               TotalPrice = 20000,
                               Disabled = "SI",
                               ClientParkingLotId = Guid.NewGuid(),
@@ -75,12 +73,14 @@ namespace RRSEASYPARKTESTING
             IMapper mapper = config.CreateMapper();
 
             // Configurar el mock para el servicio
-            mockClienteService.Setup(service => service.AddReservation(It.IsAny<DateTime>(),
+            mockClienteService.Setup(service => service.AddReservation(It.IsAny<string>(),
               It.IsAny<long>(),
-              It.IsAny<DateTime>(),
+              It.IsAny<TimeOnly>(),
+              It.IsAny<TimeOnly>(),
              It.IsAny<Guid>(),
              It.IsAny<Guid>(),
-             It.IsAny<string>())).ReturnsAsync((DateTime startDate, long totalPrice, DateTime endDate,  Guid typeVehicleId, Guid clientId, Guid parkingLotId, string disabled) =>
+             It.IsAny<string>(),
+             It.IsAny<Guid>())).ReturnsAsync((string date, long totalprice, TimeOnly starttime, TimeOnly endtime, Guid typeVehicleId, Guid parkingLotId, string Disability, Guid idUser) =>
              new ServiceResponse
              {
                  Result = ServiceResponseType.Succeded,
@@ -91,8 +91,7 @@ namespace RRSEASYPARKTESTING
             // Act
             var newReservation = new ReservationPostDto
             {
-                EndDate = DateTime.Now,
-                StartDate = DateTime.Now,
+                Date = (DateTime.Now).ToString(),
                 TotalPrice = 20000,
                 Disability = "SI",
                 VehicleType = Guid.NewGuid(),
@@ -121,7 +120,9 @@ namespace RRSEASYPARKTESTING
             IMapper mapper = config.CreateMapper();
 
             // Configurar el mock para el servicio
-            mockClienteService.Setup(service => service.UpdateReservation(It.IsAny<Guid>(), It.IsAny<DateTime>(), It.IsAny<DateTime>(),
+            mockClienteService.Setup(service => service.UpdateReservation
+             (It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>(),
+              It.IsAny<string>(),
               It.IsAny<long>(),
               It.IsAny<string>())).ReturnsAsync(
              new ServiceResponse
@@ -135,8 +136,7 @@ namespace RRSEASYPARKTESTING
             var newReservation = new ReservationDto
             {
                 Id = Guid.NewGuid(),
-                EndDate = DateTime.Now,
-                StartDate = DateTime.Now,
+                Date = (DateTime.Now).ToString(),
                 TotalPrice = 20000,
                 Disabled = "SI",
                 ClientId = Guid.NewGuid(),
@@ -174,13 +174,7 @@ namespace RRSEASYPARKTESTING
              });
             var reservationController = new ApiReservationController(mockClienteService.Object, mapper, null);
 
-            // Act
-            var newReservation = new ReservationDto
-            {
-                Id = Guid.NewGuid()
-            };
-
-            var result = await reservationController.DeleteReservation(newReservation);
+            var result = await reservationController.DeleteReservation(Guid.NewGuid());
 
             // Assert
             // Verificar si el resultado es de tipo OkResult
@@ -190,6 +184,6 @@ namespace RRSEASYPARKTESTING
             Assert.Equal(200, okResult.StatusCode);
 
         }
-        */
+        
     }
 }

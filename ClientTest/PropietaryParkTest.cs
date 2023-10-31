@@ -17,11 +17,31 @@ namespace RRSEASYPARKTESTING
 {
     public class PropietaryParkTest
     {
-        /*
+        
         [Fact]
         public async Task Get()
         {
             // Arrange
+            var mockUser = new Mock<IUserService>();
+            mockUser.Setup(repo => repo.GetUser())
+                          .Returns(Task.FromResult<IEnumerable<User>>(new List<User>
+                          {
+                              new User
+                          {
+                              Id = Guid.NewGuid(),
+                              Name = "User0",
+                              Password = "JEJEJE",
+                              RolId = Guid.NewGuid(),
+
+                          },
+                          new User
+                          {
+                             Id = Guid.NewGuid(),
+                              Name = "User1",
+                              Password = "JEJEJE",
+                              RolId = Guid.NewGuid()
+                          },
+                          }));
             var mockRepositorio = new Mock<IPropietaryParkService>();
             mockRepositorio.Setup(repo => repo.GetPropietaryParks())
                           .Returns(Task.FromResult<IEnumerable<PropietaryPark>>(new List<PropietaryPark>
@@ -47,7 +67,7 @@ namespace RRSEASYPARKTESTING
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
 
-            var getPropietaryPark = new ApiPropietaryParkController(mockRepositorio.Object, mapper);
+            var getPropietaryPark = new ApiPropietaryParkController(mockRepositorio.Object, mapper, mockUser.Object);
 
             // Act
             var result = await getPropietaryPark.GetPropietaryParks();
@@ -63,6 +83,7 @@ namespace RRSEASYPARKTESTING
         {
             // Arrange
             var mockClienteService = new Mock<IPropietaryParkService>();
+            var mockUser = new Mock<IUserService>();
 
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
@@ -72,22 +93,32 @@ namespace RRSEASYPARKTESTING
             mockClienteService.Setup(service => service.AddPropietaryPark(It.IsAny<string>(),
              It.IsAny<long>(),
              It.IsAny<string>(),
+             It.IsAny<long>(),
              It.IsAny<Guid>())).ReturnsAsync((string name, long identification, string email, Guid idUser) =>
              new ServiceResponse
              {
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Propierio agregado exitosamente"
              });
-            var propietaryController = new ApiPropietaryParkController(mockClienteService.Object, mapper);
+            mockUser.Setup(service => service.AddUser(It.IsAny<string>(),
+           It.IsAny<string>(),
+           It.IsAny<string>(),
+          It.IsAny<Guid>())).ReturnsAsync((string name, string password, string rol, Guid id) =>
+          new ServiceResponse
+          {
+              Result = ServiceResponseType.Succeded,
+              InformationMessage = "Cliente agregado exitosamente"
+          });
+            var propietaryController = new ApiPropietaryParkController(mockClienteService.Object, mapper, mockUser.Object);
 
             // Act
-            var newPropietaryPark = new PropietaryParkDto
+            var newPropietaryPark = new PropietaryParkPostDto
             {
-                Id = Guid.NewGuid(),
+              
                 Name = "Nuevo Propietario",
                 Identification = 555555555,
                 Email = "propietario@cliente.com",
-                UserId = Guid.NewGuid()
+             
             };
 
             var result = await propietaryController.AddPropietaryPark(newPropietaryPark);
@@ -106,7 +137,7 @@ namespace RRSEASYPARKTESTING
         {
             // Arrange
             var mockClienteService = new Mock<IPropietaryParkService>();
-
+            var mockUser = new Mock<IUserService>();
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
@@ -120,7 +151,15 @@ namespace RRSEASYPARKTESTING
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Propierio actualizado exitosamente"
              });
-            var propietaryController = new ApiPropietaryParkController(mockClienteService.Object, mapper);
+            mockUser.Setup(service => service.UpdateUser(It.IsAny<Guid>(),
+           It.IsAny<string>(),
+           It.IsAny<string>())).ReturnsAsync((Guid id, string name, string password) =>
+          new ServiceResponse
+          {
+              Result = ServiceResponseType.Succeded,
+              InformationMessage = "Cliente agregado exitosamente"
+          });
+            var propietaryController = new ApiPropietaryParkController(mockClienteService.Object, mapper, mockUser.Object);
 
             // Act
             var newPropietaryPark = new PropietaryParkDto
@@ -148,7 +187,7 @@ namespace RRSEASYPARKTESTING
         {
             // Arrange
             var mockClienteService = new Mock<IPropietaryParkService>();
-
+            var mockUser = new Mock<IUserService>();
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
@@ -160,7 +199,13 @@ namespace RRSEASYPARKTESTING
                  Result = ServiceResponseType.Succeded,
                  InformationMessage = "Propierio eliminado exitosamente"
              });
-            var propietaryController = new ApiPropietaryParkController(mockClienteService.Object, mapper);
+            mockUser.Setup(service => service.DeleteUser(It.IsAny<Guid>())).ReturnsAsync(
+            new ServiceResponse
+            {
+                Result = ServiceResponseType.Succeded,
+                InformationMessage = "Cliente eliminado exitosamente"
+            });
+            var propietaryController = new ApiPropietaryParkController(mockClienteService.Object, mapper, mockUser.Object);
 
             // Act
             var newPropietaryPark = new PropietaryParkDto
@@ -178,7 +223,7 @@ namespace RRSEASYPARKTESTING
             Assert.Equal(200, okResult.StatusCode);
 
         }
-        */
+        
 
     }
 }

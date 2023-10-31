@@ -12,12 +12,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RRSEASYPARK.Utilities;
+using RRSEASYPARK.Models.Request;
 
 namespace RRSEASYPARKTESTING
 {
     public class UserTest
     {
-        /*
+        
         [Fact]
         public async Task Get()
         {
@@ -67,29 +68,16 @@ namespace RRSEASYPARKTESTING
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMaperProfile>());
             IMapper mapper = config.CreateMapper();
-
-            // Configurar el mock para el servicio
-            mockClienteService.Setup(service => service.AddUser(It.IsAny<string>(),
-                It.IsAny<string>(),
-                It.IsAny<Guid>())
-           ).ReturnsAsync((string name, string password, Guid RolId) =>
-             new ServiceResponse
-             {
-                 Result = ServiceResponseType.Succeded,
-                 InformationMessage = "Usuario agregado exitosamente"
-             });
             var userController = new ApiUserController(mockClienteService.Object, mapper);
 
             // Act
-            var newUserDto = new UserDto
+            var newUserDto = new AuthRequest
             {
-                Id = Guid.NewGuid(),
-                Name = "User2",
+                nameUser = "User2",
                 Password = "password1",
-                RolId = Guid.NewGuid()
             };
 
-            var result = await userController.AddUser(newUserDto);
+            var result = await userController.Autentification(newUserDto);
 
             // Assert
             // Verificar si el resultado es de tipo OkResult
@@ -175,6 +163,6 @@ namespace RRSEASYPARKTESTING
             Assert.Equal(200, okResult.StatusCode);
 
         }
-        */
+        
     }
 }

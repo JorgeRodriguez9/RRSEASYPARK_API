@@ -15,7 +15,7 @@ using RRSEASYPARK.Utilities;
 
 namespace RRSEASYPARKTESTING
 {
-    /*
+    
     public class ParkingLotTest
     {
 
@@ -98,8 +98,10 @@ namespace RRSEASYPARKTESTING
               It.IsAny<int>(),
               It.IsAny<int>(),
               It.IsAny<int>(),
+              It.IsAny<string>(),
+              It.IsAny<string>(),
              It.IsAny<Guid>(),
-             It.IsAny<Guid>())).ReturnsAsync((string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, Guid cityId, Guid propietaryParkId) =>
+             It.IsAny<Guid>())).ReturnsAsync((string name, string adress, string nit, long telefhone, int price, int disabilityPrice, string info, int cantSpacesMoto, int cantSpacesCar, int cantSpacesDisability, string disabilityservices, string image, Guid cityId, Guid user) =>
              new ServiceResponse
              {
                  Result = ServiceResponseType.Succeded,
@@ -108,9 +110,8 @@ namespace RRSEASYPARKTESTING
             var parkingLotController = new ApiParkingLotController(mockClienteService.Object, mapper);
 
             // Act
-            var newParkingLot = new ParkingLotDto
+            var newParkingLot = new ParkingLotPostDto
             {
-                Id = Guid.NewGuid(),
                 Name = "Parqueadero2",
                 Adress = "calle 28 # 13-06",
                 Nit = "1781354644-03",
@@ -123,7 +124,7 @@ namespace RRSEASYPARKTESTING
                 CantSpacesMotorcycle = 22,
                 disabilityservices = "SI",
                 CityId = Guid.NewGuid(),
-                PropietaryParkId = Guid.NewGuid()
+                Image = "imagen.png"
             };
 
             var result = await parkingLotController.AddParkingLot(newParkingLot);
@@ -158,7 +159,10 @@ namespace RRSEASYPARKTESTING
               It.IsAny<string>(),
               It.IsAny<int>(),
               It.IsAny<int>(),
-              It.IsAny<int>())).ReturnsAsync(
+              It.IsAny<int>(),
+              It.IsAny<string>(),
+              It.IsAny<string>(),
+              It.IsAny<Guid>())).ReturnsAsync(
              new ServiceResponse
              {
                  Result = ServiceResponseType.Succeded,
@@ -167,7 +171,7 @@ namespace RRSEASYPARKTESTING
             var clienteController = new ApiParkingLotController(mockClienteService.Object, mapper);
 
             // Act
-            var newParkingLot = new ParkingLotDto
+            var newParkingLot = new ParkingUpdateDto
             {
                 Id = Guid.NewGuid(),
                 Name = "Parqueadero2",
@@ -182,7 +186,7 @@ namespace RRSEASYPARKTESTING
                 CantSpacesMotorcycle = 22,
                 disabilityservices = "SI",
                 CityId = Guid.NewGuid(),
-                PropietaryParkId = Guid.NewGuid()
+                Image = "Imagen"
             };
 
             var result = await clienteController.UpdateParkingLot(newParkingLot);
@@ -234,5 +238,5 @@ namespace RRSEASYPARKTESTING
 
     }
 
-        */
+        
 }
