@@ -6,6 +6,7 @@ using RRSEasyPark.Models;
 using RRSEASYPARK.DAL;
 using RRSEASYPARK.Enums;
 using RRSEASYPARK.Models;
+using System.Globalization;
 using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -27,7 +28,9 @@ namespace RRSEASYPARK.Service
 
                 var ParkingLot = await _context.parkingLots.FindAsync(parkingLotId);
                 var TypeVehicle = await _context.typeVehicles.FindAsync(typeVehicleId);
-
+                var fecha = DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime fechaConvertida);
+                string fechaFormateada = fechaConvertida.ToString("MM-dd-yyyy");
+         
 
                 if (ParkingLot == null)
                 {
@@ -42,7 +45,7 @@ namespace RRSEASYPARK.Service
                 //Variables
                 var test = (int)Enums.NumbersValues.b;
                 
-                DateTime requestedDate = DateTime.ParseExact(date, "MM-dd-yyyy", null); //28
+                DateTime requestedDate = DateTime.ParseExact(fechaFormateada, "MM-dd-yyyy", null); //28
                 DateOnly requestedDateOnly = DateOnly.FromDateTime(requestedDate);
                 DateTime currentDate = DateTime.Now;                
                 DateOnly CurrentDateOnly = DateOnly.FromDateTime(currentDate); //25
@@ -140,7 +143,7 @@ namespace RRSEASYPARK.Service
                 await _context.reservations.AddAsync(new Reservation()
                 {
                     Id = Guid.NewGuid(),
-                    Date = date.ToString(),
+                    Date = fechaFormateada,
                     StartTime = starttime.ToString(),
                     EndTime = endtime.ToString(),
                     TypeVehicleId = typeVehicleId,
